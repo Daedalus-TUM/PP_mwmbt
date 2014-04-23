@@ -188,32 +188,74 @@ Netzplan oder Balkendiagramm (Gantt-Diagramm)
 
 Zusätzliche Detailpläne können ebenfalls hilfreich sein!
 
-\section{Material- und Kostenplanung}
+\section{Material- und Kostenplanung:}
 
-Für welches Arbeitspaket wird was benötigt?
 
-Welche Kosten entstehen?
+Zwei wichtige Kriterien, welche bei jedem Bauteil beachtet werden müssen sind Preis und Gewicht, dabei müssen allerdings auch die speziellen Eigenschafften wie
+\begin{list}{-}{}
+\item Schub (Motoren/Propeller)
+\item Laufzeit (Akku)
+\item Stabilität (Gerüst)
+…
+\end{list}
+eingehalten werden.
 
-Wann muss was besorgt / geliefert werden?
+Die von Daedalus zur Verfügung gestellten Rohmaterialien sollten zum erstellen des Gondelgerüstes ausreichen, und den Gewichtsanforderungen entsprechen. Neben der bereits vorhandenen Elektrik
+\begin{list}{-}{}
+\item Microkontroller
+\item Sensorchip
+\item (ein Motorentreiber)
+\item Kabel, Isolierung, …
+\end{list}
+werden noch folgende Teile benötigt:
 
-Wo sind Mehrkosten / Einsparungen zu erwarten?
+\begin{tabular}{|c|c|c|}
+\hline 
+3x Elektromotoren & max 10Euro & conrad \\ 
+\hline 
+min 1x Motorentreiber & ~10Euro & sparkfun \\ 
+\hline 
+Propeller & 1.50 - 8.00Euro & Conrad \\ 
+\hline 
+Akku & 9 - 30Euro & Conrad \\ 
+\hline 
+Kleber & ~10Euro & Conrad \\ 
+\hline 
+\end{tabular} 
 
-Lieferanten und Bestellplanung!
+für den schlimmsten Fall ergebe dies etwa eine Summe von 115Euro.
+
+
 
 
 \section{Risikoanalyse}
 
-Abbruchkriterien und Risiken detaillieren und zusammenfassen!
+Risiken für das Projekt sind stets Verzögerungen und unerwartete kosten. Dabei sind zu beachten: 
 
-Wann muss welcher Meilenstein evaluiert werden?
+\textbf{Inkompatible oder beschädigte Bauteile.}
+\begin{list}{->}{}
+\item Nachbestellungen können lange dauern und sind teuer.
+\item alternative Teile verlangen möglicherweise Kompromisse und müssen neu getestet und verstanden werden.
+\end{list}
+\underline{Fazit:} frühe Zusammenstellung aller Komponenten und sorgfältiges Testen um Probleme früh zu erkennen.
 
-Wann müssen Meilensteine geändert werden?
 
-Welche Komponenten könnten das Projekt so beeinflussen, dass ein Abbruch wahrscheinlich wird?
+\textbf{Programmfehler.}
+\begin{list}{->}{}
+\item Debugging ist sehr Zeitaufwendig
+\item Fehler treten unerwartet auf und riskieren den Erfolg des Projektes
+\end{list}
 
-Welche Strategien gibt es im Falle von auftretenden Problemen?
+\underline{Fazit:} Alle Programme müssen gut vorbereitet werden, Arbeitsmittel müssen verstanden sein, enge Zusammenarbeit verhindert Probleme bei der Kommunikation der Programme/Programmteile.
 
-Wie wird der Projektfortschritt überwacht, damit die Risiken minimiert werden?
+
+\textbf{Ausfälle/ Terminprobleme.}
+\begin{list}{->}{}
+\item Besprechungen, Testphasen können nicht wahrgenommen werden
+\item Kollaboration mit anderem Team/Tutoren kommt schwer zustande
+\end{list}
+\underline{Fazit:} frühe und verbindliche Terminplanung um um den Arbeitsverlauf nicht zu verzögern.
+
 
 \section{Änderungen des Projektablaufes}
 Alle auftretenden Änderungen dieses Projektplanes werden beispielsweise in einer Tabelle kurz notiert um Abweichungen und ggf. Änderungen des geplanten Ziels nachvollziehen zu können.
