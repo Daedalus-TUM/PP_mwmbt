@@ -4,45 +4,45 @@
 
 %\documentclass[lang=ngerman,inputenc=ansinew,fontsize=10pt]{ldvarticle}
 \documentclass[lang=ngerman,inputenc=utf8,fontsize=10pt]{ldvarticle}
-	%PACKAGES
+%PACKAGES
 
-		\usepackage{parskip}
-		\usepackage{subfigure}
-		\usepackage{ifthen}
-		\usepackage{comment}
-		\usepackage{color}	
-		\usepackage{colortbl}
-		\usepackage{soul}
-		\usepackage{tikz}
-		\usetikzlibrary{shapes,arrows}
-		\usepackage{tabularx}
-		\usepackage{todonotes}
+\usepackage{parskip}
+\usepackage{subfigure}
+\usepackage{ifthen}
+\usepackage{comment}
+\usepackage{color}	
+\usepackage{colortbl}
+\usepackage{soul}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\usepackage{tabularx}
+\usepackage{todonotes}
 
-		
-		\definecolor{lightgray}{rgb}{0.75,0.75,0.75}
 
-		
+\definecolor{lightgray}{rgb}{0.75,0.75,0.75}
+
+
 %================================================================================
 %================================= TITLE PAGE ===================================
 %================================================================================
 
-\title{Projektplan Team X}
+\title{Propellerman}
 \subtitle{Projektpraktikum Informationsverarbeitung}
-\author{Name, Name, Name}
+\author{Daniel, Robin, Tobias}
 
 \date{\today}
 
 \begin{document}
 
-	\maketitle	
-	\thispagestyle{empty}
+\maketitle	
+\thispagestyle{empty}
 \vspace*{2cm}
 
 \hrule
 
 \section*{Motivation}
 
-Neben vielen Vorlesungen, die sich mit der Theorie befassen, bietet das Praktikum Informationsverarbeitung endlich eine Möglichkeit das bisher erlangte Wissen in die Praxis umzusetzen. Die Aufgabe, ein autonom fliegendes Luftschiff selbstständig zu entwickeln, spornt uns an, da wir unsere eigenen Ideen umsetzen und präsentieren können. Darüber hinaus gewinnen wir durch das Projekt einiges an praktischer Erfahrung hinzu. Der Wettbewerb mit dem anderen Team motiviert uns ebenfalls, da wir natürlich versuchen werden unser Luftschiff mindestens genauso gut zu bauen.   
+Neben vielen Vorlesungen, die sich mit der Theorie befassen, bietet das Praktikum Informationsverarbeitung endlich eine Möglichkeit das bisher erlangte Wissen in die Praxis umzusetzen. Die Aufgabe, ein autonom fliegendes Luftschiff selbstständig zu entwickeln, spornt uns an, da wir unsere eigenen Ideen umsetzen und präsentieren können. Darüber hinaus gewinnen wir durch das Projekt einiges an praktischer Erfahrung hinzu. Der Wettbewerb mit dem anderen Team motiviert uns ebenfalls, da wir natürlich versuchen werden unser Luftschiff mindestens genauso gut zu bauen.
 
 
 
@@ -65,21 +65,21 @@ Neben vielen Vorlesungen, die sich mit der Theorie befassen, bietet das Praktiku
 \section{Beschreibung des Projekts}
 
 \subsection*{Zielsetzung}
-Das Ziel des Projekts ist es innerhalb von ca. 3 Monaten einen kleinen autonom fliegenden Zeppelin zu bauen. Dieser soll, ohne menschlichen Eingriff während des Flugs, einen willkürlich zusammengestellten Hindernisparkour durchfliegen und ein kleines Gewicht (Rettungspaket) an eine markierte Stelle transportieren. Der Start- und Endbereich, in dem der Flug startet bzw. endet sind vorgeschrieben. Die Positionen der Hindernisse sind vor dem Flugbeginn bekannt. Weitere Bedingungen sind, dass das Luftschiff während des gesamten Flugs nicht höher als 2 Meter fliegen darf und dass das Durchfliegen des Parkours nicht länger als 15 Minuten dauern darf. 
+Das Ziel des Projekts ist es innerhalb von ca. 3 Monaten einen kleinen autonom fliegenden Zeppelin zu bauen. Dieser soll, ohne menschlichen Eingriff während des Flugs, einen willkürlich zusammengestellten Hindernisparkour durchfliegen und ein kleines Gewicht (Rettungspaket) an eine markierte Stelle transportieren. Der Start- und Endbereich, in dem der Flug startet bzw. endet sind vorgeschrieben. Die Positionen der Hindernisse sind vor dem Flugbeginn bekannt. Weitere Bedingungen sind, dass das Luftschiff während des gesamten Flugs nicht höher als 2 Meter fliegen darf und dass das Durchfliegen des Parkours nicht länger als 15 Minuten dauern darf.
 
 \subsection*{Ansatz}
-Der Zeppelin besteht aus einem, mit Helium gefüllten, Ballon und einer Gondel. Die Gondel ist im Prinzip eine Platte (z.B aus Holz, Styropor, Plastik) auf der  folgende Komponenten montiert sind:
+Der Zeppelin besteht aus einem, mit Helium gefüllten, Ballon und einer Gondel. Die Gondel ist im Prinzip eine Platte (z.B aus Holz, Styropor, Plastik) auf der folgende Komponenten montiert sind:
 \begin{itemize}
-	\item \textbf{Arduino, Sensorplatine, Motorentreiber:} zur geregelten Ansteuerung der Motoren und zur Kommunikation mit der Basisstation
-	\item \textbf{3 Motoren mit Propellern:}
-		\begin{itemize}
-			\item \textbf{in Flugrichtung:} für den Antrieb des Luftschiffs
-			\item \textbf{senkrecht zur Flugrichtung:} zum horizontalen Ausrichten des Luftschiffs
-			\item \textbf{zum Boden gerichtet:} für die Höhenregelung des Luftschiffs
-		\end{itemize}
-	\item \textbf{Elektromagnet:} als Vorrichtung zum Abwurf des Rettungspaket
-	\item \textbf{Akku:} für die Stromversorgung
-	\item \textbf{oben beschriebener Ballon:} für den Auftrieb
+\item \textbf{Arduino, Sensorplatine, Motorentreiber:} zur geregelten Ansteuerung der Motoren und zur Kommunikation mit der Basisstation
+\item \textbf{3 Motoren mit Propellern:}
+\begin{itemize}
+\item \textbf{in Flugrichtung:} für den Antrieb des Luftschiffs
+\item \textbf{senkrecht zur Flugrichtung:} zum horizontalen Ausrichten des Luftschiffs
+\item \textbf{zum Boden gerichtet:} für die Höhenregelung des Luftschiffs
+\end{itemize}
+\item \textbf{Elektromagnet:} als Vorrichtung zum Abwurf des Rettungspaket
+\item \textbf{Akku:} für die Stromversorgung
+\item \textbf{oben beschriebener Ballon:} für den Auftrieb
 \end{itemize}
 
 Für die Wegberechnung ist das Luftschiff durch drahtlose Telekommunikation mit einer Basisstation verbunden. Diese enthält die Koordinaten der zu fliegenden Strecke und sendet dem Luftschiff, abhängig von dessen aktueller Lage, die Position des nächsten Wegpunkts. Die Regelung selbst findet auf dem Arduino des Zeppelins statt.
@@ -87,69 +87,69 @@ Für die Wegberechnung ist das Luftschiff durch drahtlose Telekommunikation mit 
 \subsection*{Erfolgskriterien}
 Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \begin{itemize}
-	\item \textbf{Die Gondel darf ein Gewicht von 100 Gramm nicht überschreiten.}
-	\item \textbf{Zeppelin und Basisstation müssen korrekte Daten miteinander austauschen.}
-	\item \textbf{Die Regelung des Flugs muss stabil und robust gegenüber Störungen, vor allem unerwarteten Winden, sein.}
-	\item \textbf{Alle Komponenten müssen fest genug montiert sein.}
+\item \textbf{Die Gondel darf ein Gewicht von 100 Gramm nicht überschreiten.}
+\item \textbf{Zeppelin und Basisstation müssen korrekte Daten miteinander austauschen.}
+\item \textbf{Die Regelung des Flugs muss stabil und robust gegenüber Störungen, vor allem unerwarteten Winden, sein.}
+\item \textbf{Alle Komponenten müssen fest genug montiert sein.}
 section{Projektumfang und Meilensteine}
-
+\end{itemize}
 
 
 \begin{itemize}
-	\item \textbf{1. Projektplan bereit für Präsentation}
-		\begin{itemize}
-			\item  Recherche bereits abgeschlossen
-			\item  Liste aller benötigten Materialien erstellt
-			\item  Lösungsansatz für Projektaufgabe gefunden
-			\item  Projektstruktur vollständig
-			\item  Präsentation erstellt
-		\end{itemize}
-	\item \textbf{2. Hardware vollständig und verfügbar}
-		\begin{itemize}
-			\item Aufbau kann beginnen
-			\item Sammelbestellung bereits geliefert
-			\item Befestigung der Hardware
-			\item Gewichtsverteilung ideal gestalten
-			\item Verbindung zum Zeppelin herstellen
-		\end{itemize}
-		\item \textbf{3. Aktoren und Sensorentest}  
-		\begin{itemize}
-			\item Aktoren steuerbar
-			\item Sensoren funktionieren (Testprogramme)
-			\item Ultraschall und Infrarot senden und empfangen möglich
-		\end{itemize}
-	\item \textbf{4. Gondel fertig gebaut:}
-		\begin{itemize}
-			\item ansteuern der Gondel vom Boden aus
-			\item Verbindung IPS mit Gondel eingerichtet
-			\item Motoren sind montiert
-		\end{itemize}
-	\item \textbf{5.Erster manueller Flug} 
-		\begin{itemize}
-			\item Luftschiff lässt ferngesteuerten Flug zu
-			\item Kommunikation zwischen Geräten funktioniert
-		\end{itemize}
-	\item \textbf{6.Softwareimplementierungen abgeschlossen:} 
-		\begin{itemize}
-			\item Vorbereitungen auf autonomen Flug
-			\item IPS testen
-			\item Kommunikation zwischen Geräten funktioniert
-		\end{itemize}
-	\item \textbf{7. Simulation} 
-		\begin{itemize}
-			\item Errechnen der Positionsfehler für Regelung
-			\item Anpassungen vornehmen
-		\end{itemize}
-		\item \textbf{8. Autonomer Flug} 
-		\begin{itemize}
-			\item Ballon kommt durchs Ziel
-			
-		\end{itemize}
-	\item \textbf{9. Dokumentation}  
-		\begin{itemize}
-		\item Simultanes erfassen des aktuellen Fortschritts
-		\item abschließende schriftliche Darstellung des Projekts
-		\end{itemize}
+\item \textbf{1. Projektplan bereit für Präsentation}
+\begin{itemize}
+\item Recherche bereits abgeschlossen
+\item Liste aller benötigten Materialien erstellt
+\item Lösungsansatz für Projektaufgabe gefunden
+\item Projektstruktur vollständig
+\item Präsentation erstellt
+\end{itemize}
+\item \textbf{2. Hardware vollständig und verfügbar}
+\begin{itemize}
+\item Aufbau kann beginnen
+\item Sammelbestellung bereits geliefert
+\item Befestigung der Hardware
+\item Gewichtsverteilung ideal gestalten
+\item Verbindung zum Zeppelin herstellen
+\end{itemize}
+\item \textbf{3. Aktoren und Sensorentest}
+\begin{itemize}
+\item Aktoren steuerbar
+\item Sensoren funktionieren (Testprogramme)
+\item Ultraschall und Infrarot senden und empfangen möglich
+\end{itemize}
+\item \textbf{4. Gondel fertig gebaut:}
+\begin{itemize}
+\item ansteuern der Gondel vom Boden aus
+\item Verbindung IPS mit Gondel eingerichtet
+\item Motoren sind montiert
+\end{itemize}
+\item \textbf{5.Erster manueller Flug}
+\begin{itemize}
+\item Luftschiff lässt ferngesteuerten Flug zu
+\item Kommunikation zwischen Geräten funktioniert
+\end{itemize}
+\item \textbf{6.Softwareimplementierungen abgeschlossen:}
+\begin{itemize}
+\item Vorbereitungen auf autonomen Flug
+\item IPS testen
+\item Kommunikation zwischen Geräten funktioniert
+\end{itemize}
+\item \textbf{7. Simulation}
+\begin{itemize}
+\item Errechnen der Positionsfehler für Regelung
+\item Anpassungen vornehmen
+\end{itemize}
+\item \textbf{8. Autonomer Flug}
+\begin{itemize}
+\item Ballon kommt durchs Ziel
+
+\end{itemize}
+\item \textbf{9. Dokumentation}
+\begin{itemize}
+\item Simultanes erfassen des aktuellen Fortschritts
+\item abschließende schriftliche Darstellung des Projekts
+\end{itemize}
 
 
 \end{itemize}
@@ -168,9 +168,9 @@ Varianten und Alternativen beleuchten und deren Erfolgs- bzw. Abbruchkriterien d
 
 Detailliertes studieren der Herangehensweisen früherer Gruppen.
 
-Entwurf eines eigenen Konzeptes zur Bewältigung der Aufgabenstellung. 
+Entwurf eines eigenen Konzeptes zur Bewältigung der Aufgabenstellung.
 
-Fristgerechte Organisation passender Materialen. 
+Fristgerechte Organisation passender Materialen.
  
 
 \subsection*{Vertraut machen mit Hardware}
@@ -207,25 +207,25 @@ Welche Resourcen (Personen/andere Arbeitspakete) werden benötigt?
 \begin{footnotesize}
 \setlength{\arrayrulewidth}{1,05pt}
 \begin{tabular}[htb]{|m{0,35\textwidth}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|}
-	\hline
-	\textbf{Monat}& \multicolumn{4}{|c|}{Mai} & \multicolumn{5}{|c|}{Juni} & \multicolumn{4}{|c|}{Juli} \\ 
-	\hline
-	\textbf{Woche}&\tiny\textbf{18}&\tiny\textbf{19}&\tiny\textbf{20}&\tiny\textbf{21}& \tiny \textbf{22} & \tiny \textbf{23} & \tiny \textbf{24} & \tiny \textbf{25} &  \tiny \textbf{26} &  \tiny \textbf{27} &  \tiny \textbf{28} &  \tiny \textbf{29}  &  \tiny \textbf{30}\\
-	\hline
-	\hline
-	\rowcolor{lightgray} \textbf{Recherche und Materialbeschaffung}& \cellcolor{red} &\cellcolor{red} & & & & & & & & & & & \\
-	\hline
-	\rowcolor{lightgray} \textbf{Vertraut machen mit Hardware}& &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & & & & & & & \\
-	\hline
-	\rowcolor{lightgray} \textbf{Programmierungsarbeiten}& & &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & \\
-	\hline
-	\rowcolor{lightgray} \textbf{Päsentation}&\cellcolor{red} & & & &\cellcolor{red} & & & & & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Dokumentation}&\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &  \cellcolor{red} & \cellcolor{red} & \cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red}\\
-	\hline
-	\rowcolor{lightgray} \textbf{Meilensteine}&1 &2 &3 &4 &5 & & &6 &7 &8&9 & & \\
-	\hline
-		
+\hline
+\textbf{Monat}& \multicolumn{4}{|c|}{Mai} & \multicolumn{5}{|c|}{Juni} & \multicolumn{4}{|c|}{Juli} \\
+\hline
+\textbf{Woche}&\tiny\textbf{18}&\tiny\textbf{19}&\tiny\textbf{20}&\tiny\textbf{21}& \tiny \textbf{22} & \tiny \textbf{23} & \tiny \textbf{24} & \tiny \textbf{25} & \tiny \textbf{26} & \tiny \textbf{27} & \tiny \textbf{28} & \tiny \textbf{29} & \tiny \textbf{30}\\
+\hline
+\hline
+\rowcolor{lightgray} \textbf{Recherche und Materialbeschaffung}& \cellcolor{red} &\cellcolor{red} & & & & & & & & & & & \\
+\hline
+\rowcolor{lightgray} \textbf{Vertraut machen mit Hardware}& &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & & & & & & & \\
+\hline
+\rowcolor{lightgray} \textbf{Programmierungsarbeiten}& & &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & \\
+\hline
+\rowcolor{lightgray} \textbf{Päsentation}&\cellcolor{red} & & & &\cellcolor{red} & & & & & & & &\\
+\hline
+\rowcolor{lightgray} \textbf{Dokumentation}&\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red}\\
+\hline
+\rowcolor{lightgray} \textbf{Meilensteine}&1 &2 &3 &4 &5 & & &6 &7 &8&9 & & \\
+\hline
+
 \end{tabular}
 \end{footnotesize}
 \end{center}
@@ -245,38 +245,6 @@ Während auf der einen Seite die einzelnen Komponententests und die Software Pro
 
 Diese Punkte werden sehr kritisch behandelt, da sie einige Probleme direkt oder im späteren Verlauf bereiten können.
 
-\section{Aktivitäten- / Zeitplan}
-
-Netzplan oder Balkendiagramm (Gantt-Diagramm)
-
-\begin{center}
-\begin{footnotesize}
-\setlength{\arrayrulewidth}{1,05pt}
-\begin{tabular}[htb]{|m{0,15\textwidth}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|}
-	\hline
-	\textbf{Monat}& \multicolumn{4}{|c|}{Mai} & \multicolumn{5}{|c|}{Juni} & \multicolumn{4}{|c|}{Juli} & \multicolumn{4}{|c|}{August} & \multicolumn{5}{|c|}{September}\\ 
-	\hline
-	\textbf{Woche}&\tiny\textbf{18}&\tiny\textbf{19}&\tiny\textbf{20}&\tiny\textbf{21}& \tiny \textbf{22} & \tiny \textbf{23} & \tiny \textbf{24} & \tiny \textbf{25} &  \tiny \textbf{26} &  \tiny \textbf{27} &  \tiny \textbf{28} &  \tiny \textbf{29}  &  \tiny \textbf{30} &  \tiny \textbf{31} &  \tiny \textbf{32} &  \tiny \textbf{33} &  \tiny \textbf{34} &  \tiny \textbf{35}  &  \tiny \textbf{36} &  \tiny \textbf{37} &  \tiny \textbf{38}  &  \tiny \textbf{39}\\
-	\hline
-	\hline
-	\rowcolor{lightgray} \textbf{Recherchen}& \cellcolor{red} & \cellcolor{red} & \cellcolor{red}& \cellcolor{red}& \cellcolor{red}& & & & & & & & & & & & & & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Evaluierung}& & & & & & \cellcolor{red} & \cellcolor{red} & & & & & & & & & & & & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Implementierung}& & & & & & & & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} & & & & & & & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Analyse}& & & & & & & & & & & & & \cellcolor{red}& \cellcolor{red}& \cellcolor{red} & \cellcolor{red} & & & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Auswertung}& & & & & & & & & & & & & & & & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} & & & &\\
-	\hline
-	\rowcolor{lightgray} \textbf{Ausarbeitung}& & & & & & & & & & & & & & & & & \cellcolor{red} &\cellcolor{red} & \cellcolor{red}& \cellcolor{red} &\cellcolor{red} & \cellcolor{red}\\
-	\hline
-		
-\end{tabular}
-\end{footnotesize}
-\end{center}
-
-Zusätzliche Detailpläne können ebenfalls hilfreich sein!
 
 \section{Material- und Kostenplanung:}
 
@@ -300,18 +268,18 @@ Die von Daedalus zur Verfügung gestellten Rohmaterialien sollten zum erstellen 
 werden noch folgende Teile benötigt:
 
 \begin{tabular}{|c|c|c|}
-\hline 
-3x Elektromotoren & max 10Euro & Conrad \\ 
-\hline 
-min 1x Motorentreiber & etwa 10Euro & sparkfun \\ 
-\hline 
-Propeller & 1.50 - 8.00Euro & Conrad \\ 
-\hline 
-Akku & 9 - 30Euro & Conrad \\ 
-\hline 
-Kleber & etwa 10Euro & Conrad \\ 
-\hline 
-\end{tabular} 
+\hline
+3x Elektromotoren & max 10Euro & Conrad \\
+\hline
+min 1x Motorentreiber & etwa 10Euro & sparkfun \\
+\hline
+Propeller & 1.50 - 8.00Euro & Conrad \\
+\hline
+Akku & 9 - 30Euro & Conrad \\
+\hline
+Kleber & etwa 10Euro & Conrad \\
+\hline
+\end{tabular}
 
 für den schlimmsten Fall ergebe dies etwa eine Summe von 115Euro.
 
@@ -320,7 +288,7 @@ für den schlimmsten Fall ergebe dies etwa eine Summe von 115Euro.
 
 \section{Risikoanalyse}
 
-Risiken für das Projekt sind stets Verzögerungen und unerwartete kosten. Dabei sind zu beachten: 
+Risiken für das Projekt sind stets Verzögerungen und unerwartete kosten. Dabei sind zu beachten:
 
 \textbf{Inkompatible oder beschädigte Bauteile.}
 \begin{list}{->}{}
@@ -353,20 +321,20 @@ Um Änderungen des Projektablaufs zu dokumentieren wird ein SpreadSheet in Googl
 
 
 \begin{tabular}[htbp]{|p{0,025\textwidth}||p{0,06\textwidth}|p{0,4\textwidth}|p{0,37\textwidth}|}
-	\hline
-	\textsc{\#} & \textsc{Datum} & \textsc{Änderung} & \textsc{Grund} \\
-	\hline
-	\hline
-	1 & & & \\[1em]
-	\hline
-	2 & & & \\[1em]
-	\hline
-	3 & & & \\[1em]
-	\hline
-	4 & & & \\[1em]
-	\hline
-	5 & & & \\[1em]
-	\hline
+\hline
+\textsc{\#} & \textsc{Datum} & \textsc{Änderung} & \textsc{Grund} \\
+\hline
+\hline
+1 & & & \\[1em]
+\hline
+2 & & & \\[1em]
+\hline
+3 & & & \\[1em]
+\hline
+4 & & & \\[1em]
+\hline
+5 & & & \\[1em]
+\hline
 \end{tabular}
 
 \end{document}
