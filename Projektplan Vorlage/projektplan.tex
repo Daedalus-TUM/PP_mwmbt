@@ -84,15 +84,17 @@ Der Zeppelin besteht aus einem, mit Helium gefüllten, Ballon und einer Gondel. 
 \subsubsection*{Flugsteuerung} 
 Der Zeppelin verfügt über drei Gleichstrommotoren, die jeweils einen Propeller antreiben. Einer der drei Motoren ist für das Vorankommen des Zeppelins zuständig und ist daher in Flugrichtung montiert. Ein anderer Motor ist zum Boden gerichtet und wird für die Höhenregelung verwendet. Schaltet man diesen ab, so sinkt der Zeppelin zu Boden. Der dritte Motor, der orthogonal zu den anderen beiden ausgerichtet ist, bewirkt eine horizontale Drehung des Luftschiffs, wobei die Richtung der Drehung von der aktuellen Drehrichtung des Motors abhängt. Um ein dafür ausreichendes Moment zu erzeugen, befindet sich der Motor in einiger Entfernung zum Schwerpunkt der Gondel. Das Aussehen und die Funktion des dritten Motors ist mit dem Heckrotor eines Hubschraubers vergleichbar. Durch die oben beschriebene Anordnung der Motoren ergeben sich zwei translatorische, sowie ein rotatorischer Freiheitsgrad für die Steuerung.
 
+\newpage 
+
 \subsubsection*{Regelung}
 \begin{center}
-%\includegraphics[width=\textwidth]{Regelung.png}
+\includegraphics[width=\textwidth]{Regelung.png}
 \end{center}
 Die Regelung findet hauptsächlich auf dem Arduino-Mikrocontroller der Gondel statt. Als Rückführung dient die Positionsbestimmung über IPS. Dazu sendet die Gondel gleichzeitig ein Infrarot- und ein Ultraschallsignal. Die Bodenstationen empfangen diese Signale zeitlich versetzt und senden die zeitliche Differenz weiter an die Basisstation, die mit einem Computer verbunden ist. Der Computer berechnet zunächst die aktuelle Position des Zeppelins. Anschließend wird die Differenz zwischen der aktuellen Position des Zeppelins und den Koordinaten des nächsten Wegpunkts berechnet,die dann dem Arduino als Regelabweichung übergeben wird.
 
 \subsubsection*{Wegberechnung}
 Die Wegberechnung findet am Computer statt. Dafür wird ein Programm erstellt, dass durch Benutzereingaben Informationen zu Start- und Zielbereich, zu Hindernissen auf der Strecke und zur Lage der Abwurfzone für das Rettungspaket erhält. Ein Wegfindungsalgorithmus berechnet daraus eine Folge von Wegpunkten, die das Luftschiff Schritt für Schritt anfliegen soll. Das Programm berücksichtigt ebenfalls die Maße des Zeppelins, um jegliche Kollision mit Hindernissen zu vermeiden.
-
+\newpage 
 \subsection*{Erfolgskriterien}
 Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \begin{itemize}
@@ -104,7 +106,7 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \item \textbf{Alle elektronischen Komponenten müssen korrekt miteinander verbunden sein.}
 \item \textbf{Alle Komponenten müssen so fest montiert sein, dass sie während des Flugs nicht abfallen.}
 
-
+\newpage 
 \section{Meilensteine}
 \end{itemize}
 
@@ -130,17 +132,18 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \end{itemize}
 \item \textbf{4. Navigationssystem eingerichtet}
 \begin{itemize}
-\item Ultraschall und Infrarot senden und empfangen möglich
+\item Ultraschall und Infrarot Senden und Empfangen möglich
 \end{itemize}
 \item \textbf{5. Gondel fertig gebaut}
 \begin{itemize}
 \item Befestigung der Hardware
 \item Gewichtsverteilung ideal gestalten
 \item Verbindung vom Ballon zur Gondel
-\item ansteuern der Gondel vom Boden aus
+\item Ansteuern der Gondel vom Boden aus
 \item Verbindung IPS mit Gondel eingerichtet
 \item Motoren sind montiert
 \end{itemize}
+
 \item \textbf{6. Erster manueller Flug}
 \begin{itemize}
 \item Luftschiff lässt ferngesteuerten Flug zu
@@ -176,7 +179,7 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 
 \subsection*{Recherche/Materialbeschaffung}
 
-Detailliertes studieren der Herangehensweisen früherer Gruppen, sowie durchstöbern geeigneter Fachliteratur.
+Detailliertes Studieren der Herangehensweisen früherer Gruppen, sowie Durchstöbern geeigneter Fachliteratur.
 
 Entwurf eines eigenen Konzeptes zur Bewältigung der Aufgabenstellung.
 
@@ -191,7 +194,7 @@ Alle Teammitglieder verschaffen sich einen Überblick über die Funktionsweise d
 Danach erfolgt zunächst das Zusammenbauen der Gondel. Das Gondelgerüst besteht aus Styropor. Die Positionierung der Motoren muss getestet werden, um eine gleichmäßige Gewichtsverteilung zu erreichen. Grundsätzlich verwenden wir 1 Motor für den Vorwärtsschub, einen Motor für den Auftrieb, sowie einen Motor, der an einer Abstandsstange befestigt wird und für die notwendige Drehung um die z-Achse sorgt.
 
 Erweiterung der IPS Bodenstationen in Zusammenarbeit mit Flying Circus, zur Verbesserung der Funkübertragung. 
-
+\newpage 
 \subsection*{Programmierung}
 Entwurf einer Softwarearchitektur.
 Da die Regelung sehr zeitaufwändig und komplex ist, werden wir zuerst mit Matlab-Simulink simulieren.
@@ -289,7 +292,7 @@ Nach dem Wettflug erfolgt die Ausarbeitung des Projekts.
 \end{center}
 
 
-
+\newpage 
 \section{Aufwandsabschätzung}
 
 Für einen geregelten Arbeitsablauf müssen die Arbeitspakete sinnvoll auf- und eingeteilt werden.
@@ -313,13 +316,12 @@ Zwei wichtige Kriterien, welche bei jedem Bauteil beachtet werden müssen sind P
 \item Schub (Motoren/Propeller)
 \item Laufzeit (Akku)
 \item Stabilität (Gerüst)
-\item …
 \end{list}
 eingehalten werden.
 
 Die von Daedalus zur Verfügung gestellten Rohmaterialien sollten zum Erstellen des Gondelgerüstes ausreichen, und den Gewichtsanforderungen entsprechen. Neben der bereits vorhandenen Elektronik
 \begin{list}{-}{}
-\item Microkontroller
+\item Mikrocontroller
 \item Sensorchip (IMU)
 \item Motortreiber
 \item Ultraschallwandler
@@ -332,7 +334,7 @@ werden noch folgende Teile benötigt:
 \hline
 3x Elektromotoren & max 10 Euro & Conrad \\
 \hline
-min 1x Motorentreiber & etwa 10 Euro & sparkfun \\
+min 1x Motorentreiber & etwa 10 Euro & Conrad \\
 \hline
 3x Propeller & 1.50 - 8.00 Euro & Conrad \\
 \hline
@@ -356,7 +358,7 @@ Risiken für das Projekt sind stets Verzögerungen und unerwartete Kosten. Dabei
 \item Nachbestellungen können lange dauern und sind teuer.
 \item alternative Teile verlangen möglicherweise Kompromisse und müssen neu getestet und verstanden werden.
 \end{list}
-\underline{Fazit:} Frühe Zusammenstellung aller Komponenten und sorgfältige Tests auf Zusammenwirken mit anderen Bauteilen und den Microkontrollern um Probleme früh zu erkennen.
+\underline{Fazit:} Frühe Zusammenstellung aller Komponenten und sorgfältige Tests auf Zusammenwirken mit anderen Bauteilen und den Mikrocontroller um Probleme früh zu erkennen.
 
 
 \textbf{Programmfehler}
@@ -373,10 +375,13 @@ Risiken für das Projekt sind stets Verzögerungen und unerwartete Kosten. Dabei
 \item Besprechungen, Testphasen können nicht wahrgenommen werden
 \item Kollaboration mit anderem Team/Tutoren kommt schwer zustande
 \end{list}
-\underline{Fazit:} frühe und verbindliche Terminplanung durch gute kommunikation, mittels Skype, Googlekalender, Github, ..., um den Arbeitsverlauf nicht zu verzögern.
+\underline{Fazit:} Frühe und verbindliche Terminplanung durch gute Kommunikation, mittels Skype, Googlekalender, GitHub, um den Arbeitsverlauf nicht zu verzögern.
 
 
 \section{Änderungen des Projektablaufes}
 Um Änderungen des Projektablaufs zu dokumentieren wird eine Tabelle in GitHub erstellt, auf die alle Teammitglieder lesenden und schreibenden Zugriff haben. Die Tabelle besitzt drei Spalten, die folgende Informationen über die Änderung enthalten: Datum, Maßnahme, Änderungsgrund.
+
+
+
 
 \end{document}
