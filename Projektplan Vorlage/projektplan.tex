@@ -90,6 +90,8 @@ Der Zeppelin verfügt über drei Gleichstrommotoren, die jeweils einen Propeller
 \end{center}
 Die Regelung findet hauptsächlich auf dem Arduino-Mikrocontroller der Gondel statt. Als Rückführung dient die Positionsbestimmung über IPS. Dazu sendet die Gondel gleichzeitig ein Infrarot- und ein Ultraschallsignal. Die Bodenstationen empfangen diese Signale zeitlich versetzt und senden die zeitliche Differenz weiter an die Basisstation, die mit einem Computer verbunden ist. Der Computer berechnet zunächst die aktuelle Position des Zeppelins. Anschließend wird die Differenz zwischen der aktuellen Position des Zeppelins und den Koordinaten des nächsten Wegpunkts berechnet,die dann dem Arduino als Regelabweichung übergeben wird.
 
+\subsubsection*{Wegberechnung}
+Die Wegberechnung findet am Computer statt. Dafür wird ein Programm erstellt, dass durch Benutzereingaben Informationen zu Start- und Zielbereich, zu Hindernissen auf der Strecke und zur Lage der Abwurfzone für das Rettungspaket erhält. Ein Wegfindungsalgorithmus berechnet daraus eine Folge von Wegpunkten, die das Luftschiff Schritt für Schritt anfliegen soll. Das Programm berücksichtigt ebenfalls die Maße des Zeppelins, um jegliche Kollision mit Hindernissen zu vermeiden.
 
 \subsection*{Erfolgskriterien}
 Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
