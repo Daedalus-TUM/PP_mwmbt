@@ -86,7 +86,7 @@ Der Zeppelin verfügt über drei Gleichstrommotoren, die jeweils einen Propeller
 
 \subsubsection*{Regelung}
 \begin{center}
-\includegraphics[width=\textwidth]{Regelung.png}
+%\includegraphics[width=\textwidth]{Regelung.png}
 \end{center}
 Die Regelung findet hauptsächlich auf dem Arduino-Mikrocontroller der Gondel statt. Als Rückführung dient die Positionsbestimmung über IPS. Dazu sendet die Gondel gleichzeitig ein Infrarot- und ein Ultraschallsignal. Die Bodenstationen empfangen diese Signale zeitlich versetzt und senden die zeitliche Differenz weiter an die Basisstation, die mit einem Computer verbunden ist. Der Computer berechnet zunächst die aktuelle Position des Zeppelins. Anschließend wird die Differenz zwischen der aktuellen Position des Zeppelins und den Koordinaten des nächsten Wegpunkts berechnet,die dann dem Arduino als Regelabweichung übergeben wird.
 
