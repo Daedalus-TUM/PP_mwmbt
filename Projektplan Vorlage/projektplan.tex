@@ -226,8 +226,8 @@ Nach dem Wettflug erfolgt die Ausarbeitung des Projekts.
 
 \section{Aufwandsabschätzung}
 
-Für einen geregelten Arbeitsablauf müssen die Arbeitspakete sinnvoll auf-/ und eingeteilt werden.
-Während auf der einen Seite die einzelnen Komponententests und die Software Programmierung sich aufteilen lässt, wird es auch zu Knotenpunkten kommen an denen bestimmte Aufgaben abgeschlossen sein müssen. Wichtige Knotenpunkte sind:
+Für einen geregelten Arbeitsablauf müssen die Arbeitspakete sinnvoll auf- und eingeteilt werden.
+Während auf der einen Seite die einzelnen Komponententests und die Software Programmierung aufteilbar ist, wird es auch zu Knotenpunkten kommen an denen bestimmte Aufgaben abgeschlossen sein müssen. Wichtige Knotenpunkte sind:
 \begin{list}{-}{}
 
 \item Zusammenbauen der Gondel.
@@ -239,7 +239,7 @@ Während auf der einen Seite die einzelnen Komponententests und die Software Pro
 Diese Punkte werden sehr kritisch behandelt, da sie einige Probleme direkt oder im späteren Verlauf bereiten können.
 
 
-\section{Material- und Kostenplanung:}
+\section{Material- und Kostenplanung}
 
 
 Zwei wichtige Kriterien, welche bei jedem Bauteil beachtet werden müssen sind Preis und Gewicht, dabei müssen allerdings auch die speziellen Eigenschafften wie
@@ -247,15 +247,17 @@ Zwei wichtige Kriterien, welche bei jedem Bauteil beachtet werden müssen sind P
 \item Schub (Motoren/Propeller)
 \item Laufzeit (Akku)
 \item Stabilität (Gerüst)
-…
+\item …
 \end{list}
 eingehalten werden.
 
-Die von Daedalus zur Verfügung gestellten Rohmaterialien sollten zum Erstellen des Gondelgerüstes ausreichen, und den Gewichtsanforderungen entsprechen. Neben der bereits vorhandenen Elektrik
+Die von Daedalus zur Verfügung gestellten Rohmaterialien sollten zum Erstellen des Gondelgerüstes ausreichen, und den Gewichtsanforderungen entsprechen. Neben der bereits vorhandenen Elektronik
 \begin{list}{-}{}
 \item Microkontroller
-\item Sensorchip
-\item Motorentreiber
+\item Sensorchip (IMU)
+\item Motortreiber
+\item Ultraschallwandler
+\item infrarot LEDs
 \item Kabel, Isolierung, …
 \end{list}
 werden noch folgende Teile benötigt:
@@ -266,15 +268,15 @@ werden noch folgende Teile benötigt:
 \hline
 min 1x Motorentreiber & etwa 10 Euro & sparkfun \\
 \hline
-Propeller & 1.50 - 8.00 Euro & Conrad \\
+3x Propeller & 1.50 - 8.00 Euro & Conrad \\
 \hline
 Akku & 9 - 30 Euro & Conrad \\
 \hline
-Kleber & etwa 10 Euro & Conrad \\
-\hline
 \end{tabular}
 
-für den schlimmsten Fall ergäbe dies etwa eine Summe von 115 Euro.
+für den schlimmsten Fall ergäbe dies etwa eine Summe von 104 Euro.
+
+Die Abwurfvorrichtung wird selbst hergestellt aus vorhandenen Materialien.
 
 
 
@@ -283,29 +285,29 @@ für den schlimmsten Fall ergäbe dies etwa eine Summe von 115 Euro.
 
 Risiken für das Projekt sind stets Verzögerungen und unerwartete Kosten. Dabei sind zu beachten:
 
-\textbf{Inkompatible oder beschädigte Bauteile.}
+\textbf{Inkompatible oder beschädigte Bauteile}
 \begin{list}{->}{}
 \item Nachbestellungen können lange dauern und sind teuer.
 \item alternative Teile verlangen möglicherweise Kompromisse und müssen neu getestet und verstanden werden.
 \end{list}
-\underline{Fazit:} frühe Zusammenstellung aller Komponenten und sorgfältiges Testen um Probleme früh zu erkennen.
+\underline{Fazit:} Frühe Zusammenstellung aller Komponenten und sorgfältige Tests auf Zusammenwirken mit anderen Bauteilen und den Microkontrollern um Probleme früh zu erkennen.
 
 
-\textbf{Programmfehler.}
+\textbf{Programmfehler}
 \begin{list}{->}{}
 \item Debugging ist sehr Zeitaufwendig
 \item Fehler treten unerwartet auf und riskieren den Erfolg des Projektes
 \end{list}
 
-\underline{Fazit:} Alle Programme müssen gut vorbereitet werden, Arbeitsmittel müssen verstanden sein, enge Zusammenarbeit verhindert Probleme bei der Kommunikation der Programme/Programmteile.
+\underline{Fazit:} Die Softwarearchitektur muss gut Überlegt sein, Arbeitsmittel müssen verstanden sein, enge Zusammenarbeit verhindert Probleme bei der Kommunikation der Programme/Programmteile.
 
 
-\textbf{Ausfälle/ Terminprobleme.}
+\textbf{Ausfälle/ Terminprobleme}
 \begin{list}{->}{}
 \item Besprechungen, Testphasen können nicht wahrgenommen werden
 \item Kollaboration mit anderem Team/Tutoren kommt schwer zustande
 \end{list}
-\underline{Fazit:} frühe und verbindliche Terminplanung um den Arbeitsverlauf nicht zu verzögern.
+\underline{Fazit:} frühe und verbindliche Terminplanung durch gute kommunikation, mittels Skype, Googlekalender, Github, ..., um den Arbeitsverlauf nicht zu verzögern.
 
 
 \section{Änderungen des Projektablaufes}
