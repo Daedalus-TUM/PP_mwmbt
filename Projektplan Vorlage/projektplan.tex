@@ -126,9 +126,13 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \begin{itemize}
 \item Aktoren steuerbar
 \item Sensoren funktionieren (Testprogramme)
+\item IPS testen
+\end{itemize}
+\item \textbf{4. Navigationssystem eingerichtet}
+\begin{itemize}
 \item Ultraschall und Infrarot senden und empfangen möglich
 \end{itemize}
-\item \textbf{4. Gondel fertig gebaut:}
+\item \textbf{5. Gondel fertig gebaut}
 \begin{itemize}
 \item Befestigung der Hardware
 \item Gewichtsverteilung ideal gestalten
@@ -137,27 +141,28 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 \item Verbindung IPS mit Gondel eingerichtet
 \item Motoren sind montiert
 \end{itemize}
-\item \textbf{5.Erster manueller Flug}
+\item \textbf{6. Erster manueller Flug}
 \begin{itemize}
 \item Luftschiff lässt ferngesteuerten Flug zu
-\item Kommunikation zwischen Geräten funktioniert
+\item Kommunikation zwischen Komponenten funktioniert
 \end{itemize}
-\item \textbf{6.Softwareimplementierungen abgeschlossen:}
+\item \textbf{7. Softwareimplementierungen abgeschlossen:}
 \begin{itemize}
-\item Vorbereitungen auf autonomen Flug
-\item IPS testen
+\item Vorbereitungen auf autonomen Flug 
+\item Entwurf der Regelalgorithmen und Pfadfindung
 \end{itemize}
-\item \textbf{7. Simulation}
+\item \textbf{8. Simulation}
 \begin{itemize}
 \item Errechnen der Positionsfehler für Regelung
 \item Anpassungen vornehmen
 \end{itemize}
-\item \textbf{8. Autonomer Flug}
+\item \textbf{9. Autonomer Flug}
 \begin{itemize}
 \item Ballon kommt durchs Ziel
-
+\item Zielpunkte können angeflogen werden
+\item Paket kann positionsgenau abgeworfen werden
 \end{itemize}
-\item \textbf{9. Dokumentation}
+\item \textbf{10. Dokumentation}
 \begin{itemize}
 \item Simultanes erfassen des aktuellen Fortschritts
 \item abschließende schriftliche Darstellung des Projekts
@@ -171,7 +176,7 @@ Damit das Projekt gelingt sollten folgende Kriterien erfüllt sein:
 
 \subsection*{Recherche/Materialbeschaffung}
 
-Detailliertes studieren der Herangehensweisen früherer Gruppen.
+Detailliertes studieren der Herangehensweisen früherer Gruppen, sowie durchstöbern geeigneter Fachliteratur.
 
 Entwurf eines eigenen Konzeptes zur Bewältigung der Aufgabenstellung.
 
@@ -183,18 +188,70 @@ Fristgerechte Organisation passender Materialen.
 Anschließen einzelner Bauteile an den Computer, Wissenserwerb zum Umgang mit Software.\\
 Alle Teammitglieder verschaffen sich einen Überblick über die Funktionsweise der gesamten mechanischen und elektronischen Ausrüstung, sodass jeder in der Lage ist eigenständig Änderungen durchzuführen.
 
-Anschließend erfolgt die Montage der Gondel.
+Danach erfolgt zunächst das Zusammenbauen der Gondel. Das Gondelgerüst besteht aus Styropor. Die Positionierung der Motoren muss getestet werden, um eine gleichmäßige Gewichtsverteilung zu erreichen. Grundsätzlich verwenden wir 1 Motor für den Vorwärtsschub, einen Motor für den Auftrieb, sowie einen Motor, der an einer Abstandsstange befestigt wird und für die notwendige Drehung um die z-Achse sorgt.
 
-\subsection*{Programmierungsarbeiten}
+Erweiterung der IPS Bodenstationen in Zusammenarbeit mit Flying Circus, zur Verbesserung der Funkübertragung. 
 
-Erstellen der einzelnen Programmteile (Streckenberechnung, Kommunikation, Regelung, IPS und Treiber zum Ansteuern der Gondel)
+\subsection*{Programmierung}
+Entwurf einer Softwarearchitektur.
+Da die Regelung sehr zeitaufwändig und komplex ist, werden wir zuerst mit Matlab-Simulink simulieren.
+
+Erstellen der einzelnen Programmteile:
+\begin{itemize}
+\item \textbf{Streckenberechnung:}
+	\begin{itemize}
+	\item grafische Oberfläche für Benutzereingaben(Start-/Endbereich, Hindernisse, 		Abwurfzone, Maße des Zeppelins)
+	\item Algorithmus zur Berechnung einer Strecke von Start bis Ziel bei der das 			Luftschiff nicht mit Hindernissen kollidieren wird
+	\item Abtasten der Strecke zu einer endlichen Folge von Wegpunkten	
+	\end{itemize}
+\item \textbf{Kommunikation:}
+	\begin{itemize}
+	\item Funkübertragung zwischen Bodenstationen und Basisstation
+	\item Datenaustausch zwischen Basisstation und Gondel
+	\end{itemize}
+\item \textbf{Regelung:}
+	\begin{itemize}
+	\item Ermittlung der Ausrichtung des Zeppelins aus den Daten der IMU  
+	\item Programm zur Berechnung der Regelabweichung am Computer
+	\item Implementierung eines PID-Reglers auf dem Arduino-Mikrocontroller
+	\item Anpassen der Regelungsparameter durch Flugtests  
+	\end{itemize}
+\item \textbf{IPS}
+	\begin{itemize}
+	\item Anpassung und Beseitigung der Fehler
+	\end{itemize}
+\item \textbf{Treiber zum Ansteuern der Gondel:}
+	\begin{itemize}
+	\item Ansteuern der Motoren
+	\item Ansteuern der Infrarot-LEDs und der Ultraschallwandler
+	\item Auswerten der empfangenen Funknachrichten des nRF24L01-Moduls
+	\end{itemize}
+\item \textbf{Testen}
+	\begin{itemize}
+	\item Programm, das nacheinander alle elektrischen Komponenten ansteuert
+	\item Matlab Programm, das den Regler simuliert
+	\item Programm, das Funkmodule ausliest und die Daten am Rechner darstellt
+	\end{itemize}
+\end{itemize}
 
 Anschließend optimieren und Zusammenfügen.
 
+\subsection*{Test und Evaluation}
+\begin{itemize}
+\item \textbf{Gondel:}Testen der elektrischen Verbindungen durch Programm, das elektrische Komponenten nacheinander ansteuert 
+\item \textbf{Streckenberechnung:} Überprüfen der berechneten Strecke auf Plausibilität.
+\item \textbf{Kommunikation:} Auslesen und Überprüfen von übertragenen Daten.
+\item \textbf{Regelung:} Simulieren der Regelung in Matlab sowie protokollierte Flugtests mit Auflistung aller Regelungsparameter. 
+\item \textbf{IPS:} Überprüfung der berechneten Position des Zeppelins auf Richtigkeit.   
+\end{itemize}
+Mit den Testflügen wird nach Fertigstellung der Gondel begonnen. 
 
 
 \subsection*{Dokumentation}
 Während des gesamten Projekts wird der Fortschritt überprüft und festgehalten.
+Meilensteine müssen fristgerecht erreicht werden. Wöchentlich wird in einem Meeting der aktuelle Fortschritt besprochen und mit dem gewünschten Zeitplan abgeglichen.
+Auf Überschreitungen der gesetzen Limits muss umgehend reagiert werden.
+
 
 Nach dem Wettflug erfolgt die Ausarbeitung des Projekts.
 
@@ -204,29 +261,33 @@ Nach dem Wettflug erfolgt die Ausarbeitung des Projekts.
 \begin{center}
 \begin{footnotesize}
 \setlength{\arrayrulewidth}{1,05pt}
-\begin{tabular}[htb]{|m{0,35\textwidth}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|}
+\begin{tabular}[htb]{|m{0,48\textwidth}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|p{.05cm}|}
 \hline
 \textbf{Monat}& \multicolumn{4}{|c|}{Mai} & \multicolumn{5}{|c|}{Juni} & \multicolumn{4}{|c|}{Juli} \\
 \hline
 \textbf{Woche}&\tiny\textbf{18}&\tiny\textbf{19}&\tiny\textbf{20}&\tiny\textbf{21}& \tiny \textbf{22} & \tiny \textbf{23} & \tiny \textbf{24} & \tiny \textbf{25} & \tiny \textbf{26} & \tiny \textbf{27} & \tiny \textbf{28} & \tiny \textbf{29} & \tiny \textbf{30}\\
 \hline
-\hline
+
 \rowcolor{lightgray} \textbf{Recherche und Materialbeschaffung}& \cellcolor{red} &\cellcolor{red} & & & & & & & & & & & \\
 \hline
 \rowcolor{lightgray} \textbf{Zusammenfügen der Hardware}& &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & & & & & & & \\
 \hline
-\rowcolor{lightgray} \textbf{Programmierungsarbeiten}& & &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & \\
+\rowcolor{lightgray} \textbf{Programmierung}& & &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & & & \\
+\hline
+
+\rowcolor{lightgray} \textbf{Test und Evaluierung}& & & & & &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & &\cellcolor{red} & & &\\
 \hline
 \rowcolor{lightgray} \textbf{Päsentation}&\cellcolor{red} & & & &\cellcolor{red} & & & & & & & &\\
 \hline
 \rowcolor{lightgray} \textbf{Dokumentation}&\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} & \cellcolor{red} & \cellcolor{red} & \cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red} &\cellcolor{red}\\
 \hline
-\rowcolor{lightgray} \textbf{Meilensteine}&1 &2 &3 &4 &5 & & &6 &7 &8&9 & & \\
+\rowcolor{lightgray} \textbf{Meilensteine (werden jeweils zum Ende der KW fällig)}&1 &2 &3 &4 &5 & & &6 &7 &8&9 & & \\
 \hline
 
 \end{tabular}
 \end{footnotesize}
 \end{center}
+
 
 
 \section{Aufwandsabschätzung}
