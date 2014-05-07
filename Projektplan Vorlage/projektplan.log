@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.4.14)  23 APR 2014 23:15
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (MiKTeX 2.9) (preloaded format=pdflatex 2014.4.14)  28 APR 2014 21:23
 entering extended mode
 **projektplan.tex
 ("C:\Users\zombi\Documents\GitHub\PP_mwmbt\Projektplan Vorlage\projektplan.tex"
@@ -1250,17 +1250,15 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7.4> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 38.
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 43.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 47.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 43.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 13.24796pt on input line 47.
+(Font)              scaled to size 13.24796pt on input line 43.
 
 <logo_kl.png, id=40, 1746.525pt x 784.9325pt>
 File: logo_kl.png Graphic file (type png)
  <use logo_kl.png>
-Package pdftex.def Info: logo_kl.png used on input line 60.
+Package pdftex.def Info: logo_kl.png used on input line 56.
 (pdftex.def)             Requested size: 159.33301pt x 71.59903pt.
  [1
 
@@ -1269,175 +1267,176 @@ Package pdftex.def Info: logo_kl.png used on input line 60.
 GitHub/PP_mwmbt/Projektplan Vorlage/LDVLogoCMYK_oT.pdf> <C:/Users/zombi/Documen
 ts/GitHub/PP_mwmbt/Projektplan Vorlage/TUMLogo_oZ_Vollfl_CMYK.pdf> <C:/Users/zo
 mbi/Documents/GitHub/PP_mwmbt/Projektplan Vorlage/logo_kl.png>]
-LaTeX Font Info:    Try loading font information for OMS+phv on input line 83.
+LaTeX Font Info:    Try loading font information for OMS+phv on input line 74.
 
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\psnfss\omsphv.fd"
 File: omsphv.fd 
 )
 LaTeX Font Info:    Font shape `OMS/phv/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 83.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 74.
  [2] [3]
+[4] [5] [6]
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 7.35999pt on input line 169.
+(Font)              scaled to size 7.35999pt on input line 262.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 171.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 264.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 171.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 264.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <8> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 173.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 266.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 7.35999pt on input line 173.
+(Font)              scaled to size 7.35999pt on input line 266.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 4.59999pt on input line 175.
+(Font)              scaled to size 4.59999pt on input line 268.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <5> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 175.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 268.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 4.59999pt on input line 175.
+(Font)              scaled to size 4.59999pt on input line 268.
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 18| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 19| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 20| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 21| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 22| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 23| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 24| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 25| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 26| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 27| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 28| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--268
 []|\T1/phv/b/n/5 29| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
+Overfull \hbox (3.6924pt too wide) in paragraph at lines 268--269
 []|\T1/phv/b/n/5 30| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 31| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 1| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 32| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 2| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 33| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 3| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 34| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 4| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 35| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 5| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 36| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 6| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 37| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 7| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--175
-[]|\T1/phv/b/n/5 38| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 8| 
  []
 
 
-Overfull \hbox (3.6924pt too wide) in paragraph at lines 175--176
-[]|\T1/phv/b/n/5 39| 
+Overfull \hbox (2.66939pt too wide) in paragraph at lines 284--284
+[]|\T1/phv/m/n/8 9| 
  []
 
-[4]
+[7] [8]
 LaTeX Font Info:    Font shape `T1/phv/m/sc' will be
-(Font)              scaled to size 9.19998pt on input line 272.
+(Font)              scaled to size 9.19998pt on input line 386.
 
-Overfull \hbox (4.64784pt too wide) in paragraph at lines 272--272
+Overfull \hbox (4.64784pt too wide) in paragraph at lines 386--386
 []|\T1/phv/m/sc/10 Datum| 
  []
 
-[5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 287.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 287.
+[9]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 401.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 401.
 
 ("C:\Users\zombi\Documents\GitHub\PP_mwmbt\Projektplan Vorlage\projektplan.aux"
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 287.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 287.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 401.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 401.
 Package rerunfilecheck Info: File `projektplan.out' has not changed.
-(rerunfilecheck)             Checksum: 0FFE8D58D41284A7551E401AE7A7C57B;480.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 287.
+(rerunfilecheck)             Checksum: BCE60DD3F35776DD59EA0B2442098C49;479.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 401.
  ) 
 Here is how much of TeX's memory you used:
- 22356 strings out of 493921
- 431382 string characters out of 3144876
- 582590 words of memory out of 3000000
- 25175 multiletter control sequences out of 15000+200000
+ 22307 strings out of 493921
+ 430184 string characters out of 3144876
+ 570385 words of memory out of 3000000
+ 25117 multiletter control sequences out of 15000+200000
  48216 words of font info for 74 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
- 64i,10n,76p,909b,701s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 64i,10n,67p,948b,444s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files (x86)/MiKTeX 2.9/fonts/enc/dvips/fontname/8r.enc}<C:/Progra
 m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program 
 Files (x86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Program Files (x
 86)/MiKTeX 2.9/fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on projektplan.pdf (5 pages, 205241 bytes).
+Output written on projektplan.pdf (9 pages, 216180 bytes).
 PDF statistics:
- 99 PDF objects out of 1000 (max. 8388607)
- 22 named destinations out of 1000 (max. 500000)
+ 124 PDF objects out of 1000 (max. 8388607)
+ 31 named destinations out of 1000 (max. 500000)
  92 words of extra memory for PDF output out of 10000 (max. 10000000)
 
