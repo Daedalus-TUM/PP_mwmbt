@@ -5092,6 +5092,7 @@ naming: grid - package width</description>
 <part name="IC2" library="v-reg" deviceset="LM323-TO3" device=""/>
 <part name="IC3" library="v-reg" deviceset="LM323-TO3" device=""/>
 <part name="C10" library="capacitor-wima" deviceset="C" device="2,5-3"/>
+<part name="R2" library="docu-dummy" deviceset="R" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -5199,6 +5200,8 @@ naming: grid - package width</description>
 <text x="68.58" y="363.22" size="1.778" layer="91">+</text>
 <text x="50.8" y="363.22" size="1.778" layer="91">GND</text>
 <text x="139.7" y="314.96" size="1.778" layer="91">12V</text>
+<text x="190.5" y="246.38" size="1.778" layer="91">0.1-10uF</text>
+<text x="127" y="304.8" size="1.778" layer="91">1k</text>
 </plain>
 <instances>
 <instance part="U1" gate="G$1" x="-121.92" y="172.72"/>
@@ -5280,6 +5283,7 @@ naming: grid - package width</description>
 <instance part="IC2" gate="G$1" x="66.04" y="325.12" rot="R270"/>
 <instance part="IC3" gate="G$1" x="137.16" y="325.12" rot="R270"/>
 <instance part="C10" gate="G$1" x="205.74" y="248.92"/>
+<instance part="R2" gate="G$1" x="129.54" y="309.88" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -6246,6 +6250,9 @@ naming: grid - package width</description>
 <wire x1="78.74" y1="154.94" x2="68.58" y2="154.94" width="0.1524" layer="91"/>
 <label x="68.58" y="154.94" size="1.778" layer="95"/>
 <pinref part="JP7" gate="G$1" pin="12"/>
+<wire x1="78.74" y1="154.94" x2="226.06" y2="154.94" width="0.1524" layer="91"/>
+<wire x1="226.06" y1="154.94" x2="226.06" y2="99.06" width="0.1524" layer="91"/>
+<junction x="78.74" y="154.94"/>
 </segment>
 </net>
 <net name="RXI" class="0">
@@ -6331,6 +6338,9 @@ naming: grid - package width</description>
 <pinref part="C10" gate="G$1" pin="1"/>
 <wire x1="205.74" y1="251.46" x2="205.74" y2="256.54" width="0.1524" layer="91"/>
 <junction x="205.74" y="256.54"/>
+<wire x1="124.46" y1="309.88" x2="124.46" y2="325.12" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="325.12" x2="129.54" y2="325.12" width="0.1524" layer="91"/>
+<junction x="129.54" y="325.12"/>
 </segment>
 </net>
 <net name="N$7" class="0">
@@ -6360,9 +6370,12 @@ naming: grid - package width</description>
 <net name="N$8" class="0">
 <segment>
 <pinref part="IC3" gate="G$1" pin="OUT"/>
-<wire x1="137.16" y1="317.5" x2="137.16" y2="302.26" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="317.5" x2="137.16" y2="309.88" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="309.88" x2="137.16" y2="302.26" width="0.1524" layer="91"/>
 <wire x1="137.16" y1="302.26" x2="467.36" y2="302.26" width="0.1524" layer="91"/>
 <wire x1="467.36" y1="302.26" x2="467.36" y2="193.04" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="309.88" x2="137.16" y2="309.88" width="0.1524" layer="91"/>
+<junction x="137.16" y="309.88"/>
 </segment>
 </net>
 </nets>
