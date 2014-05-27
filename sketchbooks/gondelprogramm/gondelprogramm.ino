@@ -244,16 +244,20 @@ byte parseMsg() {
         
                   //MOTOREN
         case 33:{
-         int8_t N_speed = data[5];      bool N_direction = data[6];
-         int8_t Rot_speed = data[7];    bool Rot_direction = data[8];
-         int8_t Z_speed = data[9];      bool Z_direction = data[10];
+         int N_speed = data[5]*2;      bool N_direction = data[6];
+         int Rot_speed = data[7]*2;    bool Rot_direction = data[8];
+         int Z_speed = data[9]*2;      bool Z_direction = data[10];
          
          digitalWrite(4,N_direction);   analogWrite(5,N_speed);
          digitalWrite(7,Rot_direction); analogWrite(6,Rot_speed);
          digitalWrite(8,Z_direction);   analogWrite(9,Z_speed);
          
+         Serial.print("N: ");Serial.print(N_speed);
+         Serial.print(" Rot: ");Serial.print(Rot_speed);
+         Serial.print(" Z: ");Serial.println(Z_speed);
          
         }
+        break;
           
         case 101: {
             int16_t x= (data[5]<<8) + data[6];

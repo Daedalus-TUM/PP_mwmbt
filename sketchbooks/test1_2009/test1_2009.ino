@@ -333,10 +333,10 @@ void setup() {
   
   //newPacket((byte)1, (byte)193, Version);
   
-  
+  pinMode(2,INPUT);
 }
   //motoren ansteuerungen
-int8_t Motor_N = 88, Motor_Rot,  Motor_Z;
+  int8_t Motor_N = 88, Motor_Rot,  Motor_Z;
   byte Motor[6];
   int regel_faktor =1;
 
@@ -346,7 +346,40 @@ void loop(){
   sendPackages();
   
   
-  Motor[0] = abs(Motor_N * regel_faktor);
+  
+const int VERT = A0; // analog
+const int HORIZ = A1; // analog
+const int SEL = 2; // digital
+  
+   int vertical, horizontal, select;
+  
+  // read all values from the joystick
+  
+  vertical = analogRead(VERT) -510; // will be 0-1023
+  horizontal = analogRead(HORIZ) -510; // will be 0-1023
+  select = digitalRead(SEL); // will be HIGH (1) if not pressed, and LOW (0) if pressed
+  
+  
+  Serial.print("vertical: ");
+  Serial.print(vertical,DEC);
+  Serial.print(" horizontal: ");
+  Serial.print(horizontal,DEC);
+  Serial.print(" select: ");
+  if(select == HIGH){
+    Serial.println("not pressed");
+    Motor_Z = 120;
+  }else{
+    Serial.println("PRESSED!");
+    Motor_Z = 0;
+  }
+  
+  
+  Motor_N = int8_t(vertical/4.2);
+  Motor_Rot = int8_t(horizontal/4.2);
+  
+  Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.print(Motor_Z);
+  
+  Motor[0] = abs(Motor_N);
   if(Motor_N > 0) Motor[1] = 0;
   else Motor[1] = 1;
   
@@ -354,8 +387,8 @@ void loop(){
   if(Motor_Rot > 0) Motor[3] = 0;
   else Motor[3] = 1;
   
-  Motor[4] = abs(Motor_N * regel_faktor);
-  if(Motor_N > 0) Motor[5] = 0;
+  Motor[4] = abs(Motor_Z * regel_faktor);
+  if(Motor_Z > 0) Motor[5] = 0;
   else Motor[5] = 1;
   
   newPacket(54, 33, Motor);
