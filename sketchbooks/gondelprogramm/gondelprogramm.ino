@@ -11,7 +11,7 @@
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for InvenSense evaluation board)
 // AD0 high = 0x69
-MPU6050 accelgyro(0x69);
+//MPU6050 accelgyro(0x69);
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -404,7 +404,7 @@ void loop(){
   
   //IMU*******************************************************
   // read raw accel/gyro measurements from device
-    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+    //accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
