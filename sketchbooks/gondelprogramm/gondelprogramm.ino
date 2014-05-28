@@ -189,44 +189,6 @@ byte parseMsg() {
           ackpid = ((unsigned int)data[5]<< 8 + (unsigned int)data[6]);
           deletePID(ackpid);
           break;
-        case 193: {//REG
-          byte pid[2];
-          pid[0] = data[3];
-          pid[1] = data[4];
-          byte from = data[1];
-          newPacket(from, (byte)192, pid);
-          }
-          break;
-        case 64: {//deltat
-          unsigned long deltat;
-          deltat = (unsigned long)data[8];
-          deltat += (unsigned long)data[7]<<8;
-          deltat += (unsigned long)data[6]<<16;
-          deltat += (unsigned long)data[5]<<24;
-          byte from = data[1];
-          sync(from,data[9]);
-          Serial.print("t");
-          if(from<10) Serial.print('0');
-          Serial.print(from);
-          if(deltat<10) Serial.print('0');
-          if(deltat<100) Serial.print('0');
-          if(deltat<1000) Serial.print('0');
-          if(deltat<10000) Serial.print('0');
-          if(deltat<100000) Serial.print('0');
-          if(deltat<1000000) Serial.print('0');
-          if(deltat<10000000) Serial.print('0');
-          if(deltat<100000000) Serial.print('0');
-          if(deltat<1000000000) Serial.print('0');
-          Serial.print(deltat);
-          Serial.print("\n");
-          byte pid[2];
-          pid[0] = data[3];
-          pid[1] = data[4];
-          
-          
-          newPacket(from, (byte)192, pid);
-          }
-          break;
         
         
                   //LED TEST
@@ -356,24 +318,49 @@ byte isNewPid(byte from, unsigned int pid) {
 }
 
 
-byte devicesync[MAXSTATIONS] = {0};
-// sync
-void sync(byte from, byte syn) {
-  if (devicesync[from]) {
-    Serial.println("sync");
-    for (int i=0;i<MAXSTATIONS;i++) {
-      devicesync[i] = 0;
-    }
+
+
+//############Höhensensor
+
+ int i2cGetMeasurement (byte address) {
+  int reading = -1;
+  Wire.beginTransmission(address); // transmit to device #112
+  
+  Wire.write(0x02);      // sets register pointer to echo #1 register (0x02)
+  Wire.endTransmission();      // stop transmitting
+
+  Wire.requestFrom(address, byte(2));    // request 2 bytes from slave device #112
+  if(1 < Wire.available())    // if two bytes were received
+  {
+    reading = Wire.read();  // receive high byte (overwrites previous reading)
+    reading = reading << 8;    // shift high byte to be high 8 bits
+    reading |= Wire.read(); // receive low byte as lower 8 bits
   }
-  devicesync[from] = 1;
+  return reading;
 }
 
+void i2cStartMeasurement (byte address) {
+    Wire.beginTransmission(address);
+    Wire.write(byte(0x00));
+    Wire.write(byte(0x51));  //0x50  Real Ranging Mode - Result in inches
+                             //0x51  Real Ranging Mode - Result in centimeters
+                             //0x52  Real Ranging Mode - Result in micro-seconds
+                             //0x56  Fake Ranging Mode - Result in inches
+                             //0x57  Fake Ranging Mode - Result in centimeters
+                             //0x58  Fake Ranging Mode - Result in micro-seconds
+                             //0x5C  Transmit an 8 cycle 40khz burst
+    Wire.endTransmission();
+}
+
+//##############
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("IPS ");
   Serial.println(VERSION);
+  
+  Wire.begin();
   //init NRF24
   Mirf.spi = &MirfHardwareSpi;
   Mirf.cePin = 19;
@@ -401,6 +388,12 @@ void setup() {
 long previousMillis = 0;
 
 void loop(){
+  int hight=0;
+  
+  //Höhe******************************************************
+  i2cStartMeasurement(byte(240));
+  delay(70);
+  hight= i2cGetMeasurement(byte(240));
   
   //IMU*******************************************************
   // read raw accel/gyro measurements from device
@@ -426,4 +419,7 @@ void loop(){
 
     
   }*/
+  
+  Serial.println(hight);
+  
 }

@@ -1,27 +1,28 @@
 
-/*
- * Ultraschallsensor(MB1240)
- */
+ /* Ultraschallsensor(MB1240)
+ *
   
 long value = 0;                      // Variable für die Zeit vom US-Sensor zum Objekt
 long high = 0;                       // Variable für die Entfernung vom US-Sensor zum Objekt
  
-const int us    = A2;                // US Pin 2  an Pin A1
+const int us    = A3;                // US Pin 2  an Pin A1
 int Entfernung = 0;
  
 void setup()
 {
   Serial.begin(9600);                // Baudrate
   pinMode(us, INPUT);                // US-Pin als Eingang festlegen
-   
+  
   Serial.println("DISTANCE");
   Serial.println("cm");
  }
  
 void loop()
 {
-  value = pulseIn(us, HIGH);         // Berechnungen
-  high = value*(1000/58);
+  //value = pulseIn(us, HIGH);         // Berechnungen
+  value = analogRead(us);
+  //high = value*(1000/58);
+  high = value *(500/1000);
   Entfernung = high/1000;
    
   Serial.print(Entfernung);
@@ -35,13 +36,14 @@ void loop()
 /*
  * Ultraschallsensor(SRF02)
  */
- /*
+ 
  #include <Wire.h>
   
 void setup()
 {
   Serial.begin(9600);                // Baudrate
   Wire.begin();
+
 }
  
  int i2cGetMeasurement (byte address) {
@@ -50,7 +52,7 @@ void setup()
   
   Wire.write(0x02);      // sets register pointer to echo #1 register (0x02)
   Wire.endTransmission();      // stop transmitting
-  delay(6);
+
   Wire.requestFrom(address, byte(2));    // request 2 bytes from slave device #112
   if(1 < Wire.available())    // if two bytes were received
   {
@@ -77,10 +79,13 @@ void i2cStartMeasurement (byte address) {
 
 void loop()
 {
+
   int hight=0;
-  i2cStartMeasurement(0xE2);
-  delay(100);
-  hight= i2cGetMeasurement(0xE2);
+
+  i2cStartMeasurement(byte(240));
+  delay(70);
+  hight= i2cGetMeasurement(byte(240));
   Serial.println(hight);
   
-}*/
+  
+}
