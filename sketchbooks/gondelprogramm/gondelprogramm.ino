@@ -46,6 +46,8 @@ const byte MAXSTATIONS = 15;
 
 // Global Variables
 int PID = 5;
+unsigned long t;  // needed for IPS
+unsigned long time;  //needed for IPS
 
 class Packet {
   //byte time;
@@ -354,6 +356,35 @@ void i2cStartMeasurement (byte address) {
 
 //##############
 
+//############## IPS Ultraschall- und Infrarotsignal (200us lang 40kHz Impulse, alle 200ms)
+void ips_signal()
+{
+  if(micros()-time>200000)
+  {
+    time = micros();
+    
+    for(t=0; t<=200;)
+    {
+      t = micros()-time;
+  
+      digitalWrite(signal, HIGH);
+      delayMicroseconds(2);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      digitalWrite(signal, LOW);
+      delayMicroseconds(2);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+    }
+  }  
+}
+
 
 void setup() {
   Serial.begin(9600);
@@ -383,12 +414,16 @@ void setup() {
   pinMode(7,OUTPUT);
   pinMode(8,OUTPUT);
   pinMode(9,OUTPUT);
+  pinMode(10, OUTPUT);  //40kHz signal for IPS
+  time = micros();
 }
 
 long previousMillis = 0;
 
 void loop(){
   int hight=0;
+  
+  ips_signal();
   
   //Höhe******************************************************
   i2cStartMeasurement(byte(240));

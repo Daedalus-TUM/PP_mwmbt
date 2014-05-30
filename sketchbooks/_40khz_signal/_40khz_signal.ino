@@ -1,4 +1,4 @@
-int signal = 4;
+int signal = 10;
 unsigned long t;
 unsigned long time;
 
