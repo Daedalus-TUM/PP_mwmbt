@@ -48,6 +48,7 @@ const byte MAXSTATIONS = 15;
 int PID = 5;
 unsigned long t;  // needed for IPS
 unsigned long time;  //needed for IPS
+int signal = 10; //needed for IPS
 
 class Packet {
   //byte time;
@@ -208,17 +209,17 @@ byte parseMsg() {
         
                   //MOTOREN
         case 33:{
-         int N_speed = data[5]*2;      bool N_direction = data[6];
-         int Rot_speed = data[7]*2;    bool Rot_direction = data[8];
-         int Z_speed = data[9]*2;      bool Z_direction = data[10];
+         int N_speed = data[5]*2;        bool N_direction = data[6];
+         int Rot_speed = data[7]*2;      bool Rot_direction = data[8];
+         int Z_speed = data[9]*2;        bool Z_direction = data[10];
          
-         digitalWrite(4,N_direction);   analogWrite(5,N_speed);
-         digitalWrite(7,Rot_direction); analogWrite(6,Rot_speed);
-         digitalWrite(8,Z_direction);   analogWrite(9,Z_speed);
+         digitalWrite(4,N_direction);    analogWrite(5,N_speed);
+         digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
+         digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
-         Serial.print("N: ");Serial.print(N_speed);
-         Serial.print(" Rot: ");Serial.print(Rot_speed);
-         Serial.print(" Z: ");Serial.println(Z_speed);
+         Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
+         Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
+         Serial.print("  Z: ");Serial.println(Z_speed);Serial.print(" Z_dir: ");Serial.print(Z_direction);
          
         }
         break;
@@ -368,19 +369,19 @@ void ips_signal()
       t = micros()-time;
   
       digitalWrite(signal, HIGH);
-      delayMicroseconds(2);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
+      delayMicroseconds(3);
+   //   delayMicroseconds(2);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(1);
       digitalWrite(signal, LOW);
-      delayMicroseconds(2);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
-      delayMicroseconds(1);
+      delayMicroseconds(3);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(2);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(1);
+   //   delayMicroseconds(1);
     }
   }  
 }
@@ -414,7 +415,7 @@ void setup() {
   pinMode(7,OUTPUT);
   pinMode(8,OUTPUT);
   pinMode(9,OUTPUT);
-  pinMode(10, OUTPUT);  //40kHz signal for IPS
+  pinMode(signal, OUTPUT);  //40kHz signal for IPS
   time = micros();
 }
 

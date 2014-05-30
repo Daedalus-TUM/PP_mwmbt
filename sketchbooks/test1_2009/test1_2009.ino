@@ -342,6 +342,8 @@ void setup() {
 
 long previousMillis = 0;
 byte led_an[6];
+
+
 void loop(){
   sendPackages();
   
@@ -367,15 +369,17 @@ const int SEL = 2; // digital
   Serial.print(" select: ");
   if(select == HIGH){
     Serial.println("not pressed");
-    Motor_Z = 120;
+    Motor_Z = -120;
   }else{
     Serial.println("PRESSED!");
     Motor_Z = 0;
   }
   
+  if((-40 > vertical) || (vertical > 40))Motor_N = int8_t(vertical/4.2);
+  else Motor_N = 0;
   
-  Motor_N = int8_t(vertical/4.2);
-  Motor_Rot = int8_t(horizontal/4.2);
+  if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
+  else Motor_Rot = 0;
   
   Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.print(Motor_Z);
   
