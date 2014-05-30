@@ -364,24 +364,25 @@ void ips_signal()
   {
     time = micros();
     
+    
     for(t=0; t<=200;)
     {
       t = micros()-time;
   
       digitalWrite(signal, HIGH);
-      delayMicroseconds(3);
+   //   delayMicroseconds(3);
    //   delayMicroseconds(2);
-   //   delayMicroseconds(1);
-   //   delayMicroseconds(1);
-   //   delayMicroseconds(1);
-   //   delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      
       digitalWrite(signal, LOW);
-      delayMicroseconds(3);
-   //   delayMicroseconds(1);
+   //   delayMicroseconds(3);
    //   delayMicroseconds(2);
-   //   delayMicroseconds(1);
-   //   delayMicroseconds(1);
-   //   delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      delayMicroseconds(1);
+      
     }
   }  
 }

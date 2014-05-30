@@ -1,0 +1,11 @@
+Freitag 30.Mai 2014
+Author: Daniel Michalovics
+
+IPS Ultraschallsender funktioniert. Infrarot-LEDs leuchten nicht.
+Wurde folgendermaßen ermittelt:
+Bodenstation blinkt gelb, wenn Ultraschall- und IR- Signal (ca. 40kHz) empfangen
+werden. Beim Versuch mit der eigenen Gondel blinkte die Bodenstation nicht. Beim Versuch mit einer Testgondel blinkte die Bodenstation schon. Daraufhin wurde Ultraschall von der eigenen Gondel und Infrarot von der Testgondel gesendet. Die Bodenstation blinkte. Folglich werden die LEDs der eigenen Gondel von der Bodenstation nicht registriert. Die Vermutung liegt nahe, dass sie gar nicht leuchten. Die Polung der LEDs wurde überprüft. Möglicherweise sind sie defekt.
+
+HINWEIS: Auf den großen Arduino habe ich aus versehen das Gondelprogramm 
+	 geuploadet.     
+
