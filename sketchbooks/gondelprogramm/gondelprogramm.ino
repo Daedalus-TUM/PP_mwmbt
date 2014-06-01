@@ -17,6 +17,11 @@ int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t mx, my, mz;
 
+int16_t h_tn, h_tm;
+int16_t tm, tn, t_tm, t_tn;
+
+int16_t height_soll = 120;
+
 #define LED_PIN 13
 bool blinkState = false;
 
@@ -217,9 +222,9 @@ byte parseMsg() {
          digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
          digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
-         Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
-         Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
-         Serial.print("  Z: ");Serial.println(Z_speed);Serial.print(" Z_dir: ");Serial.print(Z_direction);
+ //        Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
+ //        Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
+ //        Serial.print("  Z: ");Serial.println(Z_speed);Serial.print(" Z_dir: ");Serial.print(Z_direction);
          
         }
         break;
@@ -387,6 +392,59 @@ void ips_signal()
   }  
 }
 
+//TEAM2 HÖHENREGELUNG**************************************************
+  
+  float derivation(float tm,float tn){
+   
+  float dt = 1000.0*((tm-tn)/(t_tm-t_tn));
+  return dt;
+}
+ 
+ 
+float integral(float tm,float tn){
+   
+  // trapezoidal method
+  float dtau   = ((tm+tn)/2) * (t_tm-t_tn) * 0.001;
+     
+  return dtau;
+}
+  
+  int hoehenregelung(float H_p,float H_i,float H_d,int height){
+  // Save values from previous cycle
+  h_tn = h_tm;
+  // Get current values
+  h_tm = height;
+   
+  // Refresh time value
+  t_tm = millis();
+   
+  // calculate slope
+  float h_slope = derivation(h_tm, h_tn);
+  float h_int   = integral(h_tm, h_tn);
+   
+  // calculates difference
+  int diff = height_soll - height;
+   
+  // calculates integral
+  int sum_h = sum_h + h_int; 
+  float f = f + diff;
+ 
+  int mspeed_h= H_p * diff + H_i * sum_h + H_d * h_slope;
+  
+  Serial.print("stellwert_H: ");Serial.print(mspeed_h);
+  
+ 
+  // PID-controller
+  if(mspeed_h > 0) return mspeed_h;
+  else return 0;
+  
+  }
+  
+//*********************************************************************
+
+
+
+
 
 void setup() {
   Serial.begin(9600);
@@ -456,7 +514,10 @@ void loop(){
 
     
   }*/
-  
+  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
+  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4,.01,0,hight));
+    
+    Serial.print(" hoehe: ");
   Serial.println(hight);
   
 }
