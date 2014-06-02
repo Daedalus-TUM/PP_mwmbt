@@ -27,8 +27,8 @@ const byte MAXSTATIONS = 15;
 // Global Variables
 int PID = 5;
 
-int soll_x, soll_y, x,y,z;
-int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0;
+int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
+x,y,z,soll_x, soll_y;
 
 //regel parameter
 float N_P    = 1,
@@ -335,10 +335,13 @@ float xy_winkel(){
 }
 
 void lese_position(){
-  if(Serial.available() > 2){
-    x= Serial.read();
-    y= Serial.read();
-    z= Serial.read();
+  if(Serial.available() > 0){
+    while(Serial.read() ==  2){
+      x= (Serial.read() << 8) + Serial.read();
+      y= (Serial.read() << 8) + Serial.read();
+      z= (Serial.read() << 8) + Serial.read();
+    }
+    
     Serial.println("Position");
     Serial.print(x);
     Serial.print(" ");
