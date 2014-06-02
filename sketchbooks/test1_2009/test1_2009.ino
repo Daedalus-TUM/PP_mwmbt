@@ -339,6 +339,13 @@ void lese_position(){
     x= Serial.read();
     y= Serial.read();
     z= Serial.read();
+    Serial.println("Position");
+    Serial.print(x);
+    Serial.print(" ");
+    Serial.print(y);
+    Serial.print(" ");
+    Serial.print(z);
+    Serial.println(" ");
   }
 }
 
@@ -401,7 +408,7 @@ int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float so
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.print("IPS ");
   Serial.println(VERSION);
   //init NRF24

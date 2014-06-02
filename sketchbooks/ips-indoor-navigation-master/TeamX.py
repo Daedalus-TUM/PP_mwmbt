@@ -12,14 +12,14 @@ import cairo
 ##
 import TeamX
 
-
+toArduino = serial.Serial("/dev/ttyUSB0", 9600) 
 
 class TeamX(threading.Thread):
     """ Das ist Eure Funktionsklasse, hier kommt alles rein, was speziell Euer Team betrifft. In den Eventhandler-Funktionen bitte keine komplizierten Berechnungen durchführen, sondern nur flags setzen, da diese von einem anderen Thread berechnet werden müssten und diesen evtl. blockieren würden(=>GUI hängt, etc.). Die run-Funktion wird in Eurem Thread ausgeführt, da kommen die Berechnungen rein. Zugriff auf die gui oder arduino habt Ihr über self.main.gui bzw. self.main.arduino """
     def __init__(self, main):
         threading.Thread.__init__(self) 
         self.main = main
-        print("TeamX")
+        print("Team Propellerman")
         self.run_ = True
         self.start_ = 0
     def run(self):
@@ -47,6 +47,12 @@ class TeamX(threading.Thread):
         self.main.filterdPos[0] = self.main.rawPos[0]
         self.main.filterdPos[1] = self.main.rawPos[1]
         self.main.filterdPos[2] = self.main.rawPos[2]
+        global toArduino
+        toArduino.write(b'
+        toArduino.write(bytes([round(self.main.filterdPos[0]/100)]))
+        toArduino.write(bytes([round(self.main.filterdPos[1]/100)]))
+        toArduino.write(bytes([round(self.main.filterdPos[2]/100)]))
+	
         pass
     def onButtonPressed(self, i):
         #welcher Button welche Nummer hat seht Ihr in der glade Datei oder im Eventhandler oder durch Testen

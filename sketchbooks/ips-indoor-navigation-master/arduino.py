@@ -8,7 +8,7 @@ import threading
 import serial
 import re
 
-DEBUG = 1
+DEBUG = 0
 
 def debug(*args):
     if DEBUG:
@@ -36,15 +36,15 @@ class Arduino(threading.Thread):
     self.strbuffer = b''
   #Dauerschleife, Beendet falls self.run_ == False; siehe threading-doku
   def run(self):
-    #i = 0  
+    i = 0  
     #debug ("Arduino start running")
     while(self.run_):
-      #i=i+1
-      #debug("Arduino run:",i)
-      #debug (self.s.inWaiting())
+      i=i+1
+      debug("Arduino run:",i)
+      debug (self.s.inWaiting())
       while (self.s.inWaiting() > 0):#if beim Alex
         self.recv_packet()
-      time.sleep(0.00005) # vorher 0.0005 je nach dem wie viele Pakete verschickt werden
+      time.sleep(0.05) # vorher 0.0005 je nach dem wie viele Pakete verschickt werden
   #deprecated, dient(e) zu Testzwecken
   def setled(self, led, state):
     self.ttylock.acquire()
@@ -64,10 +64,11 @@ class Arduino(threading.Thread):
       #res = self.s.readline(14)
       #res = self.s.read(self.s.inWaiting())
       self.strbuffer = self.strbuffer + self.s.read(self.s.inWaiting())
+      debug('Buffer: '+str(self.strbuffer))
       if b'sync' in self.strbuffer:
-        #debug('Buffer: '+str(self.strbuffer))
+        debug('Buffer: '+str(self.strbuffer))
         blocks = self.strbuffer.split(b'sync')
-        #debug('Bloecke: '+ str(blocks))
+        debug('Bloecke: '+ str(blocks))
         self.strbuffer = blocks[-1]
         lines = blocks[-2].split(b'\n')#blocks.split(b'\n')
         ##
@@ -75,15 +76,15 @@ class Arduino(threading.Thread):
         ##
         for line in lines:
           tmp = self.pattern.search(line)
-          #debug('Line: '+ str(line))
+          debug('Line: '+ str(line))
           if tmp is not None:
             deltat = float(tmp.group(2))
             distance = deltat * 0.345 #TODO: Temperaturanpassung, aktuell: 22°C
             if distance > 1:
                 stationnr = int(tmp.group(1))
                 millis = int(round(time.time() * 1000))
-                #debug(distance)
-                #debug('Stationnr'+str(self.main.stations[stationnr][3]))
+                debug(distance)
+                debug('Stationnr'+str(self.main.stations[stationnr][3]))
                 #Abfrage filtert Fehler durch Reflektionen; muss umso größer sein umso schneller der Zeppelin fliegt!!
                 if ((abs(distance - self.main.stations[stationnr][3]) < 800) or  (self.main.stations[stationnr][3] == 0)):
                   self.main.stations[stationnr][3] = distance
@@ -93,7 +94,7 @@ class Arduino(threading.Thread):
                   #self.main.clib_multilat()
                   #pylib_multilat(self.main)
                   #self.main.eventhandler.onNewPos()
-                  #debug("NewPos")
+                  debug("NewPos")
                   ##
           else:
             #debug (res)
@@ -104,7 +105,10 @@ class Arduino(threading.Thread):
           self.main.eventhandler.onNewPos()
           #debug("NewPos")
         ##
-        
+      else:
+        if len(self.strbuffer) > 600 :
+          self.strbuffer = b''
+          
   def recv_packet_alt(self):
     #self.ttylock.acquire() #vor jedem Zugriff aus die serialle Verbindung lock setzen
     while (self.s.inWaiting() > 0):
