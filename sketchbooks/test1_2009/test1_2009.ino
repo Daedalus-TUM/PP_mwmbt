@@ -28,7 +28,7 @@ const byte MAXSTATIONS = 15;
 int PID = 5;
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
-x,y,z,soll_x, soll_y;
+x,y,z,soll_x, soll_y, y_WP= 1000, x_WP= 1000;
 
 //regel parameter
 float N_P    = 1,
@@ -334,9 +334,15 @@ float xy_winkel(){
   return winkel;
 }
 
+float WP_winkel(){
+  float winkel= (x-x_WP)/(y-y_WP);
+  return winkel;
+}
+
 void lese_position(){
   if(Serial.available() > 0){
     while(Serial.read() ==  2){
+      delay(100);
       x= (Serial.read() << 8) + Serial.read();
       y= (Serial.read() << 8) + Serial.read();
       z= (Serial.read() << 8) + Serial.read();
@@ -525,8 +531,8 @@ const int SEL = 2; // digital
   if(currentMillis - previousMillis > 1000) {
     previousMillis = currentMillis;   
     
-    Serial.print("0:  ");  Serial.println(Motor[0]);
-    Serial.print("1:  ");  Serial.println(Motor[1]);
+    //Serial.print("0:  ");  Serial.println(Motor[0]);
+    //Serial.print("1:  ");  Serial.println(Motor[1]);
     
     led_an[0]= !led_an[0];
     newPacket( 54,10,led_an);
