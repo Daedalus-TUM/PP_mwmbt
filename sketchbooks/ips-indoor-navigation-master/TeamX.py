@@ -47,11 +47,17 @@ class TeamX(threading.Thread):
         self.main.filterdPos[0] = self.main.rawPos[0]
         self.main.filterdPos[1] = self.main.rawPos[1]
         self.main.filterdPos[2] = self.main.rawPos[2]
+        x = bytes([round(self.main.filterdPos[0]])
+        y = bytes([round(self.main.filterdPos[1]])
+        z = bytes([round(self.main.filterdPos[2]])
         global toArduino
-        toArduino.write(b'
-        toArduino.write(bytes([round(self.main.filterdPos[0]/100)]))
-        toArduino.write(bytes([round(self.main.filterdPos[1]/100)]))
-        toArduino.write(bytes([round(self.main.filterdPos[2]/100)]))
+        toArduino.write(bytes([2]))
+        toArduino.write(x >> 8)
+        toArduino.write(x & 0xFF)
+        toArduino.write(y >> 8)
+        toArduino.write(y & 0xFF)
+        toArduino.write(z >> 8)
+        toArduino.write(z & 0xFF)        
 	
         pass
     def onButtonPressed(self, i):
