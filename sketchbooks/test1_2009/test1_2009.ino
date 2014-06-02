@@ -15,6 +15,10 @@
 #define RFBASE "alex0"
 #define RFCHANNEL 3
 
+
+//manuell - automatik
+//#define Manuelle_Steuerung
+
 //constants
 const byte MYID = DEVICEID;
 const byte Version[2] = {VERSIONMAJOR,VERSIONMINOR};
@@ -22,6 +26,15 @@ const byte MAXSTATIONS = 15;
 
 // Global Variables
 int PID = 5;
+
+int soll_x, soll_y, x,y,z;
+int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0;
+
+//regel parameter
+float N_P    = 1,
+      Rot_p  = 1,
+      Rot_i  = 0,
+      Rot_d  = 0;
 
 class Packet {
   //byte time;
@@ -313,6 +326,78 @@ void sync(byte from, byte syn) {
   devicesync[from] = 1;
 }
 
+//IPS daten****************************************************************
+
+float xy_winkel(){
+  float winkel= (x-x_alt)/(y-y_alt);
+  x_alt=x; y_alt=y;
+  return winkel;
+}
+
+void lese_position(){
+  if(Serial.available() > 2){
+    x= Serial.read();
+    y= Serial.read();
+    z= Serial.read();
+  }
+}
+
+
+//erweiterte Team2 Regelung************************************************
+
+
+float derivation(float tm,float tn){
+   
+  float dt = 1000.0*((tm-tn)/(t_tm-t_tn));
+  return dt;
+}
+ 
+ 
+float integral(float tm,float tn){
+   
+  // trapezoidal method
+  float dtau   = ((tm+tn)/2) * (t_tm-t_tn) * 0.001;
+     
+  return dtau;
+}
+
+int vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
+  
+  int N_speed = 250 - abs((ist_winkel-soll_winkel) * P);
+  
+  if(N_speed > 0) return N_speed;
+  else return 0;
+  
+}
+
+int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float soll_winkel){
+  
+  // Refresh time value
+  t_tn = t_tm;
+  t_tm = millis();
+  
+  winkel_tn = winkel_tm;
+  winkel_tm = ist_winkel;
+  
+  // calculates difference
+  float diff = (ist_winkel-soll_winkel);
+  
+  // calculate slope
+  float winkel_slope = derivation(winkel_tm, winkel_tn);
+  float winkel_int   = integral(winkel_tm, winkel_tn);
+  
+  // calculates integral
+  int sum_winkel = sum_winkel + winkel_int; 
+  //float f = f + diff_winkel;
+ 
+  int mspeed_Rot= Rot_p * diff + Rot_i * sum_winkel + Rot_d * winkel_slope;
+  return mspeed_Rot;
+}
+
+
+//*************************************************************************
+//******************************************************************************************
+
 
 
 void setup() {
@@ -336,7 +421,7 @@ void setup() {
   pinMode(2,INPUT);
 }
   //motoren ansteuerungen
-  int8_t Motor_N = 88, Motor_Rot,  Motor_Z;
+  int8_t Motor_N, Motor_Rot,  Motor_Z;
   byte Motor[6];
   int regel_faktor =1;
 
@@ -344,10 +429,19 @@ long previousMillis = 0;
 byte led_an[6];
 
 
+//******************************************************************************************
+
 void loop(){
   sendPackages();
   
+  lese_position();
+  //loop variablen
+  float ist_winkel= xy_winkel(), soll_winkel;
   
+  
+  
+  //Manuelle Steuerung*********************************
+  #ifdef Manuelle_Steuerung
   
 const int VERT = A0; // analog
 const int HORIZ = A1; // analog
@@ -374,7 +468,7 @@ const int SEL = 2; // digital
     Serial.println("PRESSED!");
     Motor_Z = 0;
   }
-  
+ 
   if((-40 > vertical) || (vertical > 40))Motor_N = int8_t(vertical/4.2);
   else Motor_N = 0;
   
@@ -383,6 +477,18 @@ const int SEL = 2; // digital
   
   Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.print(Motor_Z);
   
+  #else
+  
+  
+  
+  //Regeln********************************************
+
+  Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
+  
+  Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+
+ #endif
+  
   Motor[0] = abs(Motor_N);
   if(Motor_N > 0) Motor[1] = 0;
   else Motor[1] = 1;
@@ -390,9 +496,10 @@ const int SEL = 2; // digital
   Motor[2] = abs(Motor_Rot * regel_faktor);
   if(Motor_Rot > 0) Motor[3] = 0;
   else Motor[3] = 1;
-  
+ 
+ 
   Motor[4] = abs(Motor_Z * regel_faktor);
-  if(Motor_Z > 0) Motor[5] = 0;
+  if(Motor_Z > 0)Motor[5] = 0;
   else Motor[5] = 1;
   
   newPacket(54, 33, Motor);

@@ -416,6 +416,7 @@ float integral(float tm,float tn){
   h_tm = height;
    
   // Refresh time value
+  t_tn = t_tm;
   t_tm = millis();
    
   // calculate slope
