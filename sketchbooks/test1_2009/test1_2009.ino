@@ -9,6 +9,7 @@
 #include <Mirf.h>
 #include <nRF24L01.h>
 #include <MirfHardwareSpiDriver.h>
+#include <math.h>
 
 // NRF24 settings
 #define RFADDR "alex1"
@@ -329,13 +330,13 @@ void sync(byte from, byte syn) {
 //IPS daten****************************************************************
 
 float xy_winkel(){
-  float winkel= (x-x_alt)/(y-y_alt);
+  float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
   x_alt=x; y_alt=y;
   return winkel;
 }
 
 float WP_winkel(){
-  float winkel= (x-x_WP)/(y-y_WP);
+  float winkel= (float) atan((double)(x_WP-x)/(double)(y_WP-y));
   return winkel;
 }
 
