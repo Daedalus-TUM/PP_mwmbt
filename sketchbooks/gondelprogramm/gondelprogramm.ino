@@ -20,7 +20,7 @@ int16_t mx, my, mz;
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
 
-int16_t height_soll = 120;
+int16_t height_soll = 180;
 
 #define LED_PIN 13
 bool blinkState = false;
@@ -216,7 +216,7 @@ byte parseMsg() {
         case 33:{
          int N_speed = data[5]*2;        bool N_direction = data[6];
          int Rot_speed = data[7]*2;      bool Rot_direction = data[8];
-         int Z_speed = data[9]*2;        bool Z_direction = data[10];
+         int Z_speed = data[9]*(-2.2);        bool Z_direction = data[10];
          
          digitalWrite(4,N_direction);    analogWrite(5,N_speed);
          digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
@@ -516,7 +516,7 @@ void loop(){
     
   }*/
   //int hoehenregelung(float H_p,float H_i,float H_d,int height){
-  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4,.01,0,hight));
+  digitalWrite(8,0);    analogWrite(9,hoehenregelung(5,.02,0,hight));
     
     Serial.print(" hoehe: ");
   Serial.println(hight);

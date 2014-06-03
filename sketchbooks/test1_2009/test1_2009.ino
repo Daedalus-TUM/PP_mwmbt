@@ -16,8 +16,8 @@
 #define RFCHANNEL 3
 
 
-//manuell - automatik
-//#define Manuelle_Steuerung
+//manuell - automatik*********************************************************
+#define Manuelle_Steuerung
 
 //constants
 const byte MYID = DEVICEID;
@@ -28,7 +28,9 @@ const byte MAXSTATIONS = 15;
 int PID = 5;
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
-x,y,z,soll_x, soll_y;
+x,y,z,
+soll_x,
+soll_y;
 
 //regel parameter
 float N_P    = 1,
@@ -334,6 +336,11 @@ float xy_winkel(){
   return winkel;
 }
 
+float WP_winkel(){
+  float winkel= (soll_x-x)/(soll_y-y);
+  return winkel;
+}
+
 void lese_position(){
   if(Serial.available() > 0){
     while(Serial.read() ==  2){
@@ -446,9 +453,10 @@ void loop(){
   
   lese_position();
   //loop variablen
-  float ist_winkel= xy_winkel(), soll_winkel;
+  float ist_winkel, soll_winkel;
   
-  
+  ist_winkel= xy_winkel();
+  soll_winkel= WP_winkel();
   
   //Manuelle Steuerung*********************************
   #ifdef Manuelle_Steuerung
