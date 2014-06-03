@@ -11,7 +11,7 @@
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for InvenSense evaluation board)
 // AD0 high = 0x69
-//MPU6050 accelgyro(0x69);
+MPU6050 accelgyro(0x69);
 
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
@@ -20,7 +20,7 @@ int16_t mx, my, mz;
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
 
-int16_t height_soll = 180;
+int16_t height_soll = 130;
 
 #define LED_PIN 13
 bool blinkState = false;
@@ -493,13 +493,44 @@ void loop(){
   
   //IMU*******************************************************
   // read raw accel/gyro measurements from device
-    //accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
 
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
 
+  byte a[6], g[6], m[6];
+    a[0]= (ax & 0xFF00) >> 8;a[1]= (ax & 0x00FF);
+    a[2]= (ay & 0xFF00) >> 8;a[3]= (ay & 0x00FF);
+    a[4]= (az & 0xFF00) >> 8;a[5]= (az & 0x00FF);
+    
+    g[0]= (gx & 0xFF00) >> 8;g[1]= (gx & 0x00FF);
+    g[2]= (gy & 0xFF00) >> 8;g[3]= (gy & 0x00FF);
+    g[4]= (gz & 0xFF00) >> 8;g[5]= (gz & 0x00FF);
+    
+    m[0]= (mx & 0xFF00) >> 8;m[1]= (mx & 0x00FF);
+    m[2]= (my & 0xFF00) >> 8;m[3]= (my & 0x00FF);
+    m[4]= (mz & 0xFF00) >> 8;m[5]= (mz & 0x00FF);
   
+  Serial.print("a/g/m:\t");
+    Serial.print(ax); Serial.print("\t");
+    Serial.print(ay); Serial.print("\t");
+    Serial.print(az); Serial.print("\t");
+    Serial.print(gx); Serial.print("\t");
+    Serial.print(gy); Serial.print("\t");
+    Serial.print(gz); Serial.print("\t");
+    Serial.print(mx); Serial.print("\t");
+    Serial.print(my); Serial.print("\t");
+    Serial.println(mz);
+  
+  sendPackages();
+  if (newPacket (55, 101, a))
+  sendPackages();
+  if (newPacket (55, 102, g))
+    sendPackages();
+  if (newPacket (55, 103, m))
+    sendPackages();
+    
   //SEND*****************************************************
   sendPackages();
   while(Mirf.isSending()) {};
@@ -516,7 +547,7 @@ void loop(){
     
   }*/
   //int hoehenregelung(float H_p,float H_i,float H_d,int height){
-  digitalWrite(8,0);    analogWrite(9,hoehenregelung(5,.02,0,hight));
+  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4.5,.04,0,hight));
     
     Serial.print(" hoehe: ");
   Serial.println(hight);

@@ -382,7 +382,7 @@ void loop() {
     //accelgyro.getRotation(&gx, &gy, &gz);
 
     // display tab-separated accel/gyro x/y/z values
-    /*
+    
     Serial.print("a/g/m:\t");
     Serial.print(ax); Serial.print("\t");
     Serial.print(ay); Serial.print("\t");
@@ -392,14 +392,14 @@ void loop() {
     Serial.print(gz); Serial.print("\t");
     Serial.print(mx); Serial.print("\t");
     Serial.print(my); Serial.print("\t");
-    Serial.println(mz);*/
+    Serial.println(mz);
 // This example code is in the public domain.
 
 // <http://www.zambetti.com> 
 
     // blink LED to indicate activity
     blinkState = !blinkState;
-    digitalWrite(LED_PIN, blinkState);
+//    digitalWrite(LED_PIN, blinkState);
     
     
     //senden***************************
@@ -416,7 +416,6 @@ void loop() {
     m[0]= (ax & 0xFF00) >> 8;m[1]= (ax & 0x00FF);
     m[2]= (ay & 0xFF00) >> 8;m[3]= (ay & 0x00FF);
     m[4]= (az & 0xFF00) >> 8;m[5]= (az & 0x00FF);
-    
     
     newPacket (55, 101, a);
     newPacket (55, 101, g);
