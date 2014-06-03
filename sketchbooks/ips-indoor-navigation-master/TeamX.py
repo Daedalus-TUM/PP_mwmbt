@@ -27,6 +27,18 @@ class TeamX(threading.Thread):
         while(self.run_):
             #i=i+1
             #print("TeamX run:",i)
+            x = 1240
+            y = 32700
+            z = 450		
+            global toArduino
+            toArduino.write(bytes([2]))
+            toArduino.write(bytes([x >> 8]))
+            toArduino.write(bytes([x & 0xFF]))
+            toArduino.write(bytes([y >> 8]))
+            toArduino.write(bytes([y & 0xFF]))
+            toArduino.write(bytes([z >> 8]))
+            toArduino.write(bytes([z & 0xFF]))
+            time.sleep(1)
             self.loop()
     def loop(self):
         if (self.start_):
@@ -47,11 +59,17 @@ class TeamX(threading.Thread):
         self.main.filterdPos[0] = self.main.rawPos[0]
         self.main.filterdPos[1] = self.main.rawPos[1]
         self.main.filterdPos[2] = self.main.rawPos[2]
-        global toArduino
-        toArduino.write(b'
-        toArduino.write(bytes([round(self.main.filterdPos[0]/100)]))
-        toArduino.write(bytes([round(self.main.filterdPos[1]/100)]))
-        toArduino.write(bytes([round(self.main.filterdPos[2]/100)]))
+        #x = bytes([self.main.filterdPos[0]])
+        #y = bytes([self.main.filterdPos[1]])
+        #z = bytes([self.main.filterdPos[2]])
+        #global toArduino
+        #toArduino.write(bytes([2]))
+        #toArduino.write(bytes([x >> 8]))
+        #toArduino.write(bytes([x & 0xFF]))
+        #toArduino.write(bytes([y >> 8]))
+        #toArduino.write(bytes([y & 0xFF]))
+        #toArduino.write(bytes([z >> 8]))
+        #toArduino.write(bytes([z & 0xFF]))        
 	
         pass
     def onButtonPressed(self, i):
