@@ -17,8 +17,8 @@
 #define RFCHANNEL 3
 
 
-//manuell - automatik
-//#define Manuelle_Steuerung
+//manuell - automatik*********************************************************
+#define Manuelle_Steuerung
 
 //constants
 const byte MYID = DEVICEID;
@@ -29,12 +29,16 @@ const byte MAXSTATIONS = 15;
 int PID = 5;
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
-x,y,z,soll_x, soll_y, y_WP= 1000, x_WP= 1000;
+
+x,y,z,
+y_WP= 1000,
+x_WP= 1000;
+
 
 //regel parameter
-float N_P    = 1,
-      Rot_p  = 1,
-      Rot_i  = 0,
+float N_P    = 3,
+      Rot_p  = 3,
+      Rot_i  = 0.02,
       Rot_d  = 0;
 
 class Packet {
@@ -453,9 +457,10 @@ void loop(){
   
   lese_position();
   //loop variablen
-  float ist_winkel= xy_winkel(), soll_winkel;
+  float ist_winkel, soll_winkel;
   
-  
+  ist_winkel= xy_winkel();
+  soll_winkel= WP_winkel();
   
   //Manuelle Steuerung*********************************
   #ifdef Manuelle_Steuerung
