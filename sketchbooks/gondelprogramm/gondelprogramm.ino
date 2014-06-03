@@ -220,7 +220,7 @@ byte parseMsg() {
          
          digitalWrite(4,N_direction);    analogWrite(5,N_speed);
          digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
-         digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
+ //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
  //        Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
  //        Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
