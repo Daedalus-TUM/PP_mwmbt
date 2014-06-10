@@ -252,9 +252,9 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-            Serial.print("aX: ");Serial.print(x);
-            Serial.print("aY: ");Serial.print(y);
-            Serial.print("aZ: ");Serial.print(z);
+            Serial.println("aX: ");Serial.print(x);
+            Serial.println("aY: ");Serial.print(y);
+            Serial.println("aZ: ");Serial.print(z);
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
