@@ -20,7 +20,15 @@ int16_t mx, my, mz;
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
 
-int16_t height_soll = 130;
+int16_t height_soll = 130,
+    P_h = 4,
+    I_h = .04,
+    D_h = 0;
+    
+  int height=0;
+  int height2=0;
+  int height3=0;
+    
 
 #define LED_PIN 13
 bool blinkState = false;
@@ -212,6 +220,17 @@ byte parseMsg() {
         }
         break;
         
+        case 30:{
+          
+          P_h = data[5];
+          I_h = data[6];
+          D_h = data[7];
+          
+          height_soll = data[8];
+          
+        }
+        break;
+        
                   //MOTOREN
         case 33:{
          int N_speed = data[5]*2;        bool N_direction = data[6];
@@ -222,7 +241,7 @@ byte parseMsg() {
          digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
  //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
- //        Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
+         Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
  //        Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
  //        Serial.print("  Z: ");Serial.println(Z_speed);Serial.print(" Z_dir: ");Serial.print(Z_direction);
          
@@ -392,6 +411,7 @@ void ips_signal()
   }  
 }
 
+
 //TEAM2 HÖHENREGELUNG**************************************************
   
   float derivation(float tm,float tn){
@@ -410,6 +430,7 @@ float integral(float tm,float tn){
 }
   
   int hoehenregelung(float H_p,float H_i,float H_d,int height){
+   
   // Save values from previous cycle
   h_tn = h_tm;
   // Get current values
@@ -419,20 +440,21 @@ float integral(float tm,float tn){
   t_tn = t_tm;
   t_tm = millis();
    
+   
   // calculate slope
   float h_slope = derivation(h_tm, h_tn);
   float h_int   = integral(h_tm, h_tn);
    
   // calculates difference
   int diff = height_soll - height;
-   
+  
   // calculates integral
   int sum_h = sum_h + h_int; 
   float f = f + diff;
  
   int mspeed_h= H_p * diff + H_i * sum_h + H_d * h_slope;
   
-  Serial.print("stellwert_H: ");Serial.print(mspeed_h);
+  //Serial.print(" stellwert_H: ");Serial.print(mspeed_h);
   
  
   // PID-controller
@@ -477,20 +499,31 @@ void setup() {
   pinMode(9,OUTPUT);
   pinMode(signal, OUTPUT);  //40kHz signal for IPS
   time = micros();
+  
+  i2cStartMeasurement(byte(240));
+  delay(70);
+  height= i2cGetMeasurement(byte(240));
+  h_tn = height;
+  h_tm = height;
 }
 
 long previousMillis = 0;
 
+
+//**************************************************************************
+//**************************************************************************
 void loop(){
-  int hight=0;
   
   ips_signal();
   
   //Höhe******************************************************
+  
+  height3 = height2;
+  height2 = height;
   i2cStartMeasurement(byte(240));
   delay(70);
-  hight= i2cGetMeasurement(byte(240));
-  
+  height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
+
   //IMU*******************************************************
   // read raw accel/gyro measurements from device
     accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
@@ -522,7 +555,7 @@ void loop(){
     Serial.print(mx); Serial.print("\t");
     Serial.print(my); Serial.print("\t");
     Serial.println(mz);
-  
+ 
   sendPackages();
   if (newPacket (55, 101, a))
   sendPackages();
@@ -531,7 +564,7 @@ void loop(){
   if (newPacket (55, 103, m))
     sendPackages();
     
-  //SEND*****************************************************
+  //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
   if(Mirf.dataReady()){
@@ -546,10 +579,17 @@ void loop(){
 
     
   }*/
-  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
-  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4.5,.04,0,hight));
-    
-    Serial.print(" hoehe: ");
-  Serial.println(hight);
   
+ // if((abs(height - height3) > 40) && (height3 != 0)) height_soll += (height - height3);
+  
+     Serial.print(" korrektur: ");Serial.print(height-height3);
+     Serial.print(" soll: ");Serial.print(height_soll);
+     
+  
+      Serial.print(" hoehe: ");
+    Serial.println(height);
+
+  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
+  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4.5,.04,0,height));
+    
 }

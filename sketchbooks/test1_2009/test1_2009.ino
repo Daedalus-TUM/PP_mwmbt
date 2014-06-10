@@ -228,7 +228,7 @@ byte parseMsg() {
             int16_t z= (data[9]<<8) + data[10];
             Serial.print("aX: ");Serial.print(x);
             Serial.print("aY: ");Serial.print(y);
-            Serial.print("aZ: ");Serial.print(z);
+            Serial.print("aZ: ");Serial.println(z);
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -242,7 +242,7 @@ byte parseMsg() {
             int16_t z= (data[9]<<8) + data[10];
             Serial.print("gX: ");Serial.print(x);
             Serial.print("gY: ");Serial.print(y);
-            Serial.print("gZ: ");Serial.print(z);
+            Serial.print("gZ: ");Serial.println(z);
             byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -256,7 +256,7 @@ byte parseMsg() {
             int16_t z= (data[9]<<8) + data[10];
             Serial.print("mX: ");Serial.print(x);
             Serial.print("mY: ");Serial.print(y);
-            Serial.print("mZ: ");Serial.print(z);
+            Serial.print("mZ: ");Serial.println(z);
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -442,9 +442,16 @@ void setup() {
   pinMode(2,INPUT);
 }
   //motoren ansteuerungen
-  int8_t Motor_N, Motor_Rot,  Motor_Z;
-  byte Motor[6];
+  int8_t Motor_N, Motor_Rot,  Motor_Z,
+    P_h = 4,
+    I_h = .04,
+    D_h = 0,
+    Soll_h = 130;
+    
+  byte Motor[6], Hoehe[6];
   int regel_faktor =1;
+  
+  
 
 long previousMillis = 0;
 byte led_an[6];
@@ -476,18 +483,18 @@ const int SEL = 2; // digital
   vertical = analogRead(VERT) -510; // will be 0-1023
   horizontal = analogRead(HORIZ) -510; // will be 0-1023
   select = digitalRead(SEL); // will be HIGH (1) if not pressed, and LOW (0) if pressed
-  
-  
+
+  /*
   Serial.print("vertical: ");
   Serial.print(vertical,DEC);
   Serial.print(" horizontal: ");
   Serial.print(horizontal,DEC);
-  Serial.print(" select: ");
+  Serial.print(" select: ");*/
   if(select == HIGH){
-    Serial.println("not pressed");
+//    Serial.println("not pressed");
     Motor_Z = -120;
   }else{
-    Serial.println("PRESSED!");
+//    Serial.println("PRESSED!");
     Motor_Z = 0;
   }
  
@@ -497,7 +504,7 @@ const int SEL = 2; // digital
   if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
   else Motor_Rot = 0;
   
-  Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.print(Motor_Z);
+  Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
   
   #else
   
@@ -510,6 +517,14 @@ const int SEL = 2; // digital
   Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
 
  #endif
+  
+  Hoehe[0] = P_h;
+  Hoehe[1] = I_h;
+  Hoehe[2] = D_h;
+  Hoehe[3] = Soll_h;
+  
+  if(newPacket(54, 30, Hoehe))
+  sendPackages();
   
   Motor[0] = abs(Motor_N);
   if(Motor_N > 0) Motor[1] = 0;
@@ -524,7 +539,7 @@ const int SEL = 2; // digital
   if(Motor_Z > 0)Motor[5] = 0;
   else Motor[5] = 1;
   
-  newPacket(54, 33, Motor);
+  if(newPacket(54, 33, Motor))
   sendPackages();
   
   while(Mirf.isSending()) {};
@@ -533,18 +548,17 @@ const int SEL = 2; // digital
   }
 
   unsigned long currentMillis = millis();
- 
+ /*
   if(currentMillis - previousMillis > 1000) {
     previousMillis = currentMillis;   
     
-    //Serial.print("0:  ");  Serial.println(Motor[0]);
+    Serial.print("0:  ");  Serial.println(Motor[0]);
     //Serial.print("1:  ");  Serial.println(Motor[1]);
     
     led_an[0]= !led_an[0];
     newPacket( 54,10,led_an);
     
   }
-  
-
+  */
   
 }
