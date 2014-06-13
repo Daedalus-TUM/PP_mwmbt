@@ -14,6 +14,7 @@
 // NRF24 settings
 #define RFADDR "alex1"
 #define RFBASE "alex0"
+#define FROM_GONDOLA "gondel-basis"
 #define RFCHANNEL 3
 
 
@@ -226,9 +227,9 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-            //Serial.println("aX: ");Serial.print(x);
-            //Serial.println("aY: ");Serial.print(y);
-            //Serial.println("aZ: ");Serial.print(z);
+            Serial.print("aX: ");Serial.print(x);Serial.print("\t");
+            Serial.print("aY: ");Serial.print(y);Serial.print("\t");
+            Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -240,9 +241,9 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-            Serial.print("gX: ");Serial.print(x);
-            Serial.print("gY: ");Serial.print(y);
-            Serial.print("gZ: ");Serial.print(z);
+            Serial.print("gX: ");Serial.print(x);Serial.print("\t");
+            Serial.print("gY: ");Serial.print(y);Serial.print("\t");
+            Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
             byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -254,9 +255,9 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-            Serial.print("mX: ");Serial.print(x);
-            Serial.print("mY: ");Serial.print(y);
-            Serial.print("mZ: ");Serial.print(z);
+            Serial.print("mX: ");Serial.print(x);Serial.print("\t");
+            Serial.print("mY: ");Serial.print(y);Serial.print("\t");
+            Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -423,8 +424,7 @@ int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float so
 
 void setup() {
   Serial.begin(9600);
-  Serial.print("IPS ");
-  Serial.println(VERSION);
+  Serial.print("Team Propellerman Basisstation");
   //init NRF24
   Mirf.spi = &MirfHardwareSpi;
   Mirf.cePin = 9;
@@ -464,7 +464,6 @@ void loop(){
   
   //Manuelle Steuerung*********************************
   #ifdef Manuelle_Steuerung
-  
 const int VERT = A0; // analog
 const int HORIZ = A1; // analog
 const int SEL = 2; // digital

@@ -16,6 +16,8 @@ MPU6050 accelgyro(0x69);
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 int16_t mx, my, mz;
+byte data[12];
+byte sent = 0;
 
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
@@ -449,9 +451,8 @@ float integral(float tm,float tn){
 
 void setup() {
   Serial.begin(9600);
-  Serial.print("IPS ");
-  Serial.println(VERSION);
-  
+  Serial.print("Team Propellerman Gondel");
+
   Wire.begin();
   //init NRF24
   Mirf.spi = &MirfHardwareSpi;
@@ -459,6 +460,7 @@ void setup() {
   Mirf.csnPin = 18;
   Mirf.init();
   Mirf.setRADDR((byte *)RFADDR);
+  Mirf.setTADDR((byte *)RFBASE);
   Mirf.payload = 12;
   Mirf.channel = RFCHANNEL;
   Mirf.config();
@@ -483,18 +485,18 @@ long previousMillis = 0;
 
 void loop(){
   int hight=0;
-  
   ips_signal();
   
   //Höhe******************************************************
   i2cStartMeasurement(byte(240));
   delay(70);
   hight= i2cGetMeasurement(byte(240));
-  
   //IMU*******************************************************
+  //Serial.print("Sleep Enabled: ");
+  //Serial.println(accelgyro.getSleepEnabled());
+    accelgyro.setSleepEnabled(false);
   // read raw accel/gyro measurements from device
     accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
-
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
@@ -503,14 +505,23 @@ void loop(){
     a[0]= (ax & 0xFF00) >> 8;a[1]= (ax & 0x00FF);
     a[2]= (ay & 0xFF00) >> 8;a[3]= (ay & 0x00FF);
     a[4]= (az & 0xFF00) >> 8;a[5]= (az & 0x00FF);
-    
+    newPacket((byte)55, (byte)101, a);
+    sendPackages();
+    while(Mirf.isSending()) {};
+
     g[0]= (gx & 0xFF00) >> 8;g[1]= (gx & 0x00FF);
     g[2]= (gy & 0xFF00) >> 8;g[3]= (gy & 0x00FF);
     g[4]= (gz & 0xFF00) >> 8;g[5]= (gz & 0x00FF);
+    newPacket((byte)55, (byte)102, g); 
+    sendPackages();
+    while(Mirf.isSending()) {};   
     
     m[0]= (mx & 0xFF00) >> 8;m[1]= (mx & 0x00FF);
     m[2]= (my & 0xFF00) >> 8;m[3]= (my & 0x00FF);
     m[4]= (mz & 0xFF00) >> 8;m[5]= (mz & 0x00FF);
+    newPacket((byte)55, (byte)103, m);
+    sendPackages();
+    while(Mirf.isSending()) {};
   
   Serial.print("a/g/m:\t");
     Serial.print(ax); Serial.print("\t");
@@ -523,6 +534,7 @@ void loop(){
     Serial.print(my); Serial.print("\t");
     Serial.println(mz);
   
+  /*
   sendPackages();
   if (newPacket (55, 101, a))
   sendPackages();
@@ -530,10 +542,11 @@ void loop(){
     sendPackages();
   if (newPacket (55, 103, m))
     sendPackages();
-    
+  */
+  
   //SEND*****************************************************
-  sendPackages();
-  while(Mirf.isSending()) {};
+  //sendPackages();
+  //while(Mirf.isSending()) {};
   if(Mirf.dataReady()){
     parseMsg();
   }
