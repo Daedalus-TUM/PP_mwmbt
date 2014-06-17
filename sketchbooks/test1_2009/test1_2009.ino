@@ -28,11 +28,16 @@ const byte MAXSTATIONS = 15;
 // Global Variables
 int PID = 5;
 
+// IMU
+int a[3], g[3], m[3], a_old[3], g_old[3], m_old[3];
+
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
+
 
 x,y,z,
 y_WP= 1000,
 x_WP= 1000;
+
 
 
 //regel parameter
@@ -223,20 +228,17 @@ byte parseMsg() {
           break;
           
         case 101: {
-            int16_t x= (data[5]<<8) + data[6];
-            int16_t y= (data[7]<<8) + data[8];
-            int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("aX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("aY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
-=======
+            a_old[0] = a[0];
+            a_old[1] = a[1];
+            a_old[2] = a[2];
+            a[0] = lowpassFilter(((data[5]<<8) + data[6])/16.384, a_old[0], 0.7);
+            a[1] = lowpassFilter(((data[7]<<8) + data[8])/16.384, a_old[1], 0.7);
+            a[2]= lowpassFilter(((data[9]<<8) + data[10])/16.384, a_old[2], 0.7);
 
-            Serial.print("aX: ");Serial.print(x);
-            Serial.print("aY: ");Serial.print(y);
-            Serial.print("aZ: ");Serial.println(z);
+            Serial.print("aX: ");Serial.print(a[0]);Serial.print("\t");
+            Serial.print("aY: ");Serial.print(a[1]);Serial.print("\t");
+            Serial.print("aZ: ");Serial.print(a[2]);Serial.println("\t");
 
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -245,18 +247,17 @@ byte parseMsg() {
           }
           break;
         case 102: {
-            int16_t x= (data[5]<<8) + data[6];
-            int16_t y= (data[7]<<8) + data[8];
-            int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("gX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("gY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
-=======
-            Serial.print("gX: ");Serial.print(x);
-            Serial.print("gY: ");Serial.print(y);
-            Serial.print("gZ: ");Serial.println(z);
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+            g_old[0] = g[0];
+            g_old[1] = g[1];
+            g_old[2] = g[2];
+            g[0] = lowpassFilter(((data[5]<<8) + data[6])/131, g_old[0], 0.7);
+            g[1] = lowpassFilter(((data[7]<<8) + data[8])/131, g_old[1], 0.7);
+            g[2] = lowpassFilter(((data[9]<<8) + data[10])/131, g_old[2], 0.7);
+
+            Serial.print("gX: ");Serial.print(g[0]);Serial.print("\t");
+            Serial.print("gY: ");Serial.print(g[1]);Serial.print("\t");
+            Serial.print("gZ: ");Serial.print(g[2]);Serial.println("\t");
+
             byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -265,18 +266,21 @@ byte parseMsg() {
           }
           break;
         case 103: {
-            int16_t x= (data[5]<<8) + data[6];
-            int16_t y= (data[7]<<8) + data[8];
-            int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("mX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("mY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
-=======
-            Serial.print("mX: ");Serial.print(x);
-            Serial.print("mY: ");Serial.print(y);
-            Serial.print("mZ: ");Serial.println(z);
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+            m_old[0] = m[0];
+            m_old[1] = m[1];
+            m_old[2] = m[2];
+            m[0] = lowpassFilter(((data[5]<<8) + data[6]), m_old[0], 0.7);
+            m[1] = lowpassFilter(((data[7]<<8) + data[8]), m_old[1], 0.7);
+            m[2] = lowpassFilter(((data[9]<<8) + data[10]), m_old[2], 0.7);
+
+            Serial.print("mX: ");Serial.print(m[0]);Serial.print("\t");
+            Serial.print("mY: ");Serial.print(m[1]);Serial.print("\t");
+            Serial.print("mZ: ");Serial.print(m[2]);Serial.println("\t");
+
+            Serial.print("mX: ");Serial.print(m[0]);
+            Serial.print("mY: ");Serial.print(m[1]);
+            Serial.print("mZ: ");Serial.println(m[2]);
+
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -351,7 +355,17 @@ void sync(byte from, byte syn) {
   devicesync[from] = 1;
 }
 
+// IMU Winkel
+float imu_winkel(){
+  return atan2(a[1], a[0]);
+}
+
 //IPS daten****************************************************************
+float lowpassFilter(float x_new, float x_old, float alpha)
+{
+  return (1-alpha) * x_old + alpha * x_new;
+}
+
 
 float xy_winkel(){
   float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
@@ -481,6 +495,8 @@ byte led_an[6];
 void loop(){
   sendPackages();
   
+  //Serial.println(imu_winkel());
+  
   lese_position();
   //loop variablen
   float ist_winkel, soll_winkel;
@@ -533,8 +549,7 @@ const int SEL = 2; // digital
   Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
   Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
-  Serial.print("Motor_N: "); Serial.println(Motor_N);
-  Serial.print("Motor_: "); Serial.println(Motor_N); 
+ 
  #endif
   
   Hoehe[0] = P_h;
