@@ -14,7 +14,6 @@
 // NRF24 settings
 #define RFADDR "alex1"
 #define RFBASE "alex0"
-#define FROM_GONDOLA "gondel-basis"
 #define RFCHANNEL 3
 
 
@@ -388,7 +387,7 @@ int vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   int N_speed = 250 - abs((ist_winkel-soll_winkel) * P);
   
   if(N_speed > 0) return N_speed;
-  else return 0;
+  else return 111;
   
 }
 
@@ -507,7 +506,8 @@ const int SEL = 2; // digital
   Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
   Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
-
+  Serial.print("Motor_N: "); Serial.println(Motor_N);
+  Serial.print("Motor_: "); Serial.println(Motor_N); 
  #endif
   
   Motor[0] = abs(Motor_N);
