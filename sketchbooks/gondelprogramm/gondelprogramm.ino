@@ -515,11 +515,9 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
-<<<<<<< HEAD
+
   int hight=0;
-=======
-  
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
   ips_signal();
   
   //Höhe******************************************************
@@ -528,12 +526,12 @@ void loop(){
   height2 = height;
   i2cStartMeasurement(byte(240));
   delay(70);
-<<<<<<< HEAD
+
   hight= i2cGetMeasurement(byte(240));
-=======
+
   height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
 
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
   //IMU*******************************************************
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
@@ -576,7 +574,7 @@ void loop(){
     Serial.print(mx); Serial.print("\t");
     Serial.print(my); Serial.print("\t");
     Serial.println(mz);
-<<<<<<< HEAD
+
   
   /*
 =======
@@ -595,12 +593,12 @@ void loop(){
   //SEND*****************************************************
   //sendPackages();
   //while(Mirf.isSending()) {};
-=======
+
     
   //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
   if(Mirf.dataReady()){
     parseMsg();
   }
