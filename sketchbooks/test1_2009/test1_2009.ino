@@ -18,7 +18,7 @@
 
 
 //manuell - automatik*********************************************************
-//#define Manuelle_Steuerung
+#define Manuelle_Steuerung
 
 //constants
 const byte MYID = DEVICEID;
@@ -31,12 +31,12 @@ int PID = 5;
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
 
 x,y,z,
-y_WP= 1000,
-x_WP= 1000;
+y_WP= 1500,
+x_WP= 500;
 
 
 //regel parameter
-float N_P    = 3,
+float N_P    = 5,
       Rot_p  = 3,
       Rot_i  = 0.02,
       Rot_d  = 0;
@@ -226,17 +226,12 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("aX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("aY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
-=======
 
-            Serial.print("aX: ");Serial.print(x);
-            Serial.print("aY: ");Serial.print(y);
-            Serial.print("aZ: ");Serial.println(z);
+//            Serial.print("aX: ");Serial.print(x);Serial.print("\t");
+//            Serial.print("aY: ");Serial.print(y);Serial.print("\t");
+//            Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
 
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -248,15 +243,11 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("gX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("gY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
-=======
-            Serial.print("gX: ");Serial.print(x);
-            Serial.print("gY: ");Serial.print(y);
-            Serial.print("gZ: ");Serial.println(z);
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
+//            Serial.print("gX: ");Serial.print(x);Serial.print("\t");
+//            Serial.print("gY: ");Serial.print(y);Serial.print("\t");
+//            Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
+
             byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -268,15 +259,11 @@ byte parseMsg() {
             int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
-<<<<<<< HEAD
-            Serial.print("mX: ");Serial.print(x);Serial.print("\t");
-            Serial.print("mY: ");Serial.print(y);Serial.print("\t");
-            Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
-=======
-            Serial.print("mX: ");Serial.print(x);
-            Serial.print("mY: ");Serial.print(y);
-            Serial.print("mZ: ");Serial.println(z);
->>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+
+//            Serial.print("mX: ");Serial.print(x);Serial.print("\t");
+//            Serial.print("mY: ");Serial.print(y);Serial.print("\t");
+//            Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
+
           byte pid[2];
           pid[0] = data[3];
           pid[1] = data[4];
@@ -368,17 +355,17 @@ void lese_position(){
   if(Serial.available() > 0){
     while(Serial.read() ==  2){
       delay(7);
-      x= (Serial.read() << 8) + Serial.read();
-      y= (Serial.read() << 8) + Serial.read();
-      z= (Serial.read() << 8) + Serial.read();
+      x= ((Serial.read() << 8) + Serial.read())*0.5 + x*0.5;
+      y= ((Serial.read() << 8) + Serial.read())*0.5 + y*0.5;
+      z= ((Serial.read() << 8) + Serial.read())*0.5 + z*0.5;
     }
     
-    Serial.println("Position");
-    Serial.print(x);
+    //Serial.println("Position");
+    Serial.print("x:");Serial.print(x);
     Serial.print(" ");
-    Serial.print(y);
+    Serial.print("y:");Serial.print(y);
     Serial.print(" ");
-    Serial.print(z);
+    Serial.print("z:");Serial.print(z);
     Serial.println(" ");
   }
 }
@@ -406,8 +393,8 @@ int vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
   int N_speed = 250 - abs((ist_winkel-soll_winkel) * P);
   
-  if(N_speed > 0) return N_speed;
-  else return 111;
+  if(N_speed > 0) return -N_speed;
+  else return 0;
   
 }
 
@@ -465,9 +452,10 @@ void setup() {
     P_h = 4,
     I_h = .04,
     D_h = 0,
-    Soll_h = 130;
+    Soll_h = 130,
+    drehmomentausgleich = 0.1;
     
-  byte Motor[6], Hoehe[6];
+  byte Motor[6], regel_param[6];
   int regel_faktor =1;
   
   
@@ -485,9 +473,10 @@ void loop(){
   //loop variablen
   float ist_winkel, soll_winkel;
   
-  ist_winkel= xy_winkel();
-  soll_winkel= WP_winkel();
-  
+  if(x_alt != x){
+  ist_winkel= xy_winkel();    Serial.print("  ist_W: ");Serial.print(ist_winkel);
+  soll_winkel= WP_winkel();   Serial.print("  soll_W: ");Serial.println(soll_winkel);
+  }
   //Manuelle Steuerung*********************************
   #ifdef Manuelle_Steuerung
 const int VERT = A0; // analog
@@ -522,7 +511,7 @@ const int SEL = 2; // digital
   if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
   else Motor_Rot = 0;
   
-  Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
+  //Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
   
   #else
   
@@ -533,19 +522,21 @@ const int SEL = 2; // digital
   Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
   Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
-  Serial.print("Motor_N: "); Serial.println(Motor_N);
-  Serial.print("Motor_: "); Serial.println(Motor_N); 
+//  Serial.print("Motor_N: "); Serial.println(Motor_N);
+//  Serial.print("Motor_: "); Serial.println(Motor_N); 
  #endif
   
-  Hoehe[0] = P_h;
-  Hoehe[1] = I_h;
-  Hoehe[2] = D_h;
-  Hoehe[3] = Soll_h;
   
-  if(newPacket(54, 30, Hoehe))
+  regel_param[0] = P_h;
+  regel_param[1] = I_h;
+  regel_param[2] = D_h;
+  regel_param[3] = Soll_h;
+  regel_param[4] = drehmomentausgleich;
+  
+  if(newPacket(54, 30, regel_param))
   sendPackages();
   
-  Motor[0] = abs(Motor_N);
+  Motor[0] = abs(Motor_N);      Serial.println(" bin noch da ");
   if(Motor_N > 0) Motor[1] = 0;
   else Motor[1] = 1;
   
