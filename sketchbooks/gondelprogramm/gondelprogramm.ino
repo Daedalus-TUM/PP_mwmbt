@@ -525,7 +525,11 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
+<<<<<<< HEAD
   Serial.print("loop");
+=======
+
+>>>>>>> 7359f9e3e6c5196a1fbb74ba363635460ac78801
   int hight=0;
 
   ips_signal();
@@ -538,9 +542,17 @@ void loop(){
   i2cStartMeasurement(byte(240));
   delay(70);
 
+<<<<<<< HEAD
   height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
 
 /*
+=======
+  hight= i2cGetMeasurement(byte(240));
+
+  height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
+
+
+>>>>>>> 7359f9e3e6c5196a1fbb74ba363635460ac78801
   //IMU*******************************************************
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
@@ -584,7 +596,15 @@ void loop(){
     Serial.print(my); Serial.print("\t");
     Serial.println(mz);
 
+<<<<<<< HEAD
 
+=======
+  
+  /*
+=======
+ 
+>>>>>>> ffc02cf7cc3bd4f2676ba673cff1c63fe49feed0
+>>>>>>> 7359f9e3e6c5196a1fbb74ba363635460ac78801
   sendPackages();
   if (newPacket (55, 101, a))
   sendPackages();
@@ -592,11 +612,26 @@ void loop(){
     sendPackages();
   if (newPacket (55, 103, m))
     sendPackages();
+<<<<<<< HEAD
 
 */
   //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
+=======
+<<<<<<< HEAD
+  */
+  
+  //SEND*****************************************************
+  //sendPackages();
+  //while(Mirf.isSending()) {};
+
+    
+  //SEND*****************************************************	
+  sendPackages();
+  while(Mirf.isSending()) {};
+
+>>>>>>> 7359f9e3e6c5196a1fbb74ba363635460ac78801
   if(Mirf.dataReady()){
     parseMsg();
   }

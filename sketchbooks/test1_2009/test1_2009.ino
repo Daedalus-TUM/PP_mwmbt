@@ -449,11 +449,12 @@ void setup() {
 }
   //motoren ansteuerungen
   int8_t Motor_N, Motor_Rot,  Motor_Z,
-    P_h = 4,
-    I_h = .04,
-    D_h = 0,
+    P_h = 400,                //*100
+    I_h = 4,                  //
+    D_h = 0,                  //
+    drehmomentausgleich = 2;  //
+    
     Soll_h = 130,
-    drehmomentausgleich = 0.1;
     
   byte Motor[6], regel_param[6];
   int regel_faktor =1;
