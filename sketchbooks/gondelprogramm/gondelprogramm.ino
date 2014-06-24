@@ -22,14 +22,22 @@ byte sent = 0;
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
 
-int16_t height_soll = 130,
-    P_h = 4,
-    I_h = .04,
-    D_h = 0;
+int16_t height_soll = 130;
+
+float   P_h = 4,
+        I_h = .04,
+        D_h = 0,
+    
+        Drehmoment = .02;
     
   int height=0;
   int height2=0;
   int height3=0;
+  
+  int N_speed, Rot_speed, Z_speed;      
+  bool N_direction,
+       Rot_direction,
+       Z_direction;
     
 
 #define LED_PIN 13
@@ -224,11 +232,13 @@ byte parseMsg() {
         
         case 30:{
           
-          P_h = data[5];
-          I_h = data[6];
-          D_h = data[7];
+          P_h = data[5]/100.0;  Serial.print(" P: ");Serial.print(P_h);
+          I_h = data[6]/100.0;  Serial.print(" I: ");Serial.print(I_h);
+          D_h = data[7]/100.0;  Serial.print(" D: ");Serial.print(D_h);
           
-          height_soll = data[8];
+          height_soll = data[8]; Serial.print(" soll: ");Serial.print(height_soll);
+          
+          Drehmoment = data[9]/100.0;  Serial.print(" Drehmoment: ");Serial.println(Drehmoment);
           
         }
         break;
@@ -238,10 +248,6 @@ byte parseMsg() {
          int N_speed = data[5]*2;        bool N_direction = data[6];
          int Rot_speed = data[7]*2;      bool Rot_direction = data[8];
          int Z_speed = data[9]*(-2.2);        bool Z_direction = data[10];
-         
-         digitalWrite(4,N_direction);    analogWrite(5,N_speed);
-         digitalWrite(7,Rot_direction);  analogWrite(6,Rot_speed);
- //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
          Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
  //        Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
@@ -465,17 +471,17 @@ float integral(float tm,float tn){
   
   }
   
+
+
 //*********************************************************************
-
-
-
-
 
 void setup() {
   Serial.begin(9600);
+  delay(500);
   Serial.print("Team Propellerman Gondel");
 
   Wire.begin();
+  Serial.print("t1");
   //init NRF24
   Mirf.spi = &MirfHardwareSpi;
   Mirf.cePin = 19;
@@ -486,7 +492,7 @@ void setup() {
   Mirf.payload = 12;
   Mirf.channel = RFCHANNEL;
   Mirf.config();
-  
+  Serial.print("t2");
   //PID = readPID();
   
   //newPacket((byte)1, (byte)193, Version);
@@ -501,12 +507,16 @@ void setup() {
   pinMode(9,OUTPUT);
   pinMode(signal, OUTPUT);  //40kHz signal for IPS
   time = micros();
-  
+  Serial.print("t3");
   i2cStartMeasurement(byte(240));
+  Serial.print("t4");
   delay(70);
   height= i2cGetMeasurement(byte(240));
+  Serial.print("t5");
   h_tn = height;
   h_tm = height;
+  Serial.print("/setup");
+  
 }
 
 long previousMillis = 0;
@@ -515,10 +525,12 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
-
+  
   int height=0;
+  Serial.print("loop");
 
   ips_signal();
+
   
   //Höhe******************************************************
   
@@ -526,14 +538,15 @@ void loop(){
   height2 = height;
   i2cStartMeasurement(byte(240));
   delay(70);
+  
   height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
 
-  //IMU*******************************************************
+
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
-    accelgyro.setSleepEnabled(false);
+      accelgyro.setSleepEnabled(false);
   // read raw accel/gyro measurements from device
-    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+      accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
@@ -552,7 +565,7 @@ void loop(){
     newPacket((byte)55, (byte)102, g); 
     sendPackages();
     while(Mirf.isSending()) {};   
-    
+   
     m[0]= (mx & 0xFF00) >> 8;m[1]= (mx & 0x00FF);
     m[2]= (my & 0xFF00) >> 8;m[3]= (my & 0x00FF);
     m[4]= (mz & 0xFF00) >> 8;m[5]= (mz & 0x00FF);
@@ -572,6 +585,7 @@ void loop(){
     Serial.println(mz);
 
   
+  /*
 
   sendPackages();
   if (newPacket (55, 101, a))
@@ -580,16 +594,16 @@ void loop(){
     sendPackages();
   if (newPacket (55, 103, m))
     sendPackages();
+<<<<<<< HEAD
 
-  
-  //SEND*****************************************************
-  //sendPackages();
-  //while(Mirf.isSending()) {};
+=======
+<<<<<<< HEAD
 
-    
+*/
   //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
+
 
   if(Mirf.dataReady()){
     parseMsg();
@@ -606,14 +620,36 @@ void loop(){
   
  // if((abs(height - height3) > 40) && (height3 != 0)) height_soll += (height - height3);
   
-     Serial.print(" korrektur: ");Serial.print(height-height3);
-     Serial.print(" soll: ");Serial.print(height_soll);
+ //    Serial.print(" korrektur: ");Serial.print(height-height3);
+ //    Serial.print(" soll: ");Serial.print(height_soll);
      
   
-      Serial.print(" hoehe: ");
-    Serial.println(height);
+//      Serial.print(" hoehe: ");
+//    Serial.println(height);
 
-  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
-  digitalWrite(8,0);    analogWrite(9,hoehenregelung(4.5,.04,0,height));
+
+//Motoren Steuerung*****************************************
+
+Z_speed = hoehenregelung(P_h,I_h,D_h,height);
+
+
+  int rotSpeed;
+  bool rotDir;
+ rotSpeed = ((1-(2*Rot_direction))*Rot_speed) - (Z_speed * Drehmoment);
+ if(rotSpeed > 0)rotDir=0;
+ else rotDir=1;
+
+ rotSpeed = abs(rotSpeed);
+
+  
+  
+  Serial.print(" dreh:");Serial.println(Drehmoment);
+         digitalWrite(4,N_direction);    analogWrite(5,N_speed);
+         digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
+
+ //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
+ 
+ //int hoehenregelung(float H_p,float H_i,float H_d,int height){
+         digitalWrite(8,0);    analogWrite(9,Z_speed);
     
 }

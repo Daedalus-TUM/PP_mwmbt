@@ -33,18 +33,16 @@ int a[3], g[3], m[3], a_old[3], g_old[3], m_old[3];
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0, z_alt=0,
 
-
 x,y,z,
-y_WP= 1000,
-x_WP= 1000;
-
+y_WP= 1500,
+x_WP= 500;
 
 
 //regel parameter
-float N_P    = 3,
+float N_P    = 5,
       Rot_p  = 3,
       Rot_i  = 0.02,
-      Rot_d  = 0;
+      Rot_d  = 0.0;
 
 class Packet {
   //byte time;
@@ -121,6 +119,9 @@ void sendPackages(void) {
       }
     }
 }
+
+
+
 boolean newPacket (byte dest, byte type, byte *payload) {
   if (busy<31){
     if (!(busy&1)) {
@@ -173,6 +174,14 @@ void deletePID (int pid) {
     }
     Serial.println(busy);
 }
+
+
+int lowpassFilter( int x_new, int x_old, float alpha)
+{ 
+  return alpha*x_new + (1-alpha)*x_old;
+}  
+  
+
 byte parseMsg() {
   byte data[12];
   Mirf.getData(data);
@@ -228,6 +237,7 @@ byte parseMsg() {
           break;
           
         case 101: {
+
             a_old[0] = a[0];
             a_old[1] = a[1];
             a_old[2] = a[2];
@@ -235,9 +245,15 @@ byte parseMsg() {
             a[1] = lowpassFilter(((data[7]<<8) + data[8])/16.384, a_old[1], 0.5);
             a[2]= lowpassFilter(((data[9]<<8) + data[10])/16.384, a_old[2], 0.5);
 
-            Serial.print("aX: ");Serial.print(a[0]);Serial.print("\t");
-            Serial.print("aY: ");Serial.print(a[1]);Serial.print("\t");
-            Serial.print("aZ: ");Serial.print(a[2]);Serial.println("\t");
+            int16_t x= (data[5]<<8) + data[6];
+            int16_t y= (data[7]<<8) + data[8];
+            int16_t z= (data[9]<<8) + data[10];
+
+            //Serial.print("aX: ");Serial.print(x);Serial.print("\t");
+            //Serial.print("aY: ");Serial.print(y);Serial.print("\t");
+            //Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
+
+
 
           byte pid[2];
           pid[0] = data[3];
@@ -247,6 +263,7 @@ byte parseMsg() {
           }
           break;
         case 102: {
+          
             g_old[0] = g[0];
             g_old[1] = g[1];
             g_old[2] = g[2];
@@ -254,9 +271,14 @@ byte parseMsg() {
             g[1] = lowpassFilter(((data[7]<<8) + data[8])/131, g_old[1], 0.5);
             g[2] = lowpassFilter(((data[9]<<8) + data[10])/131, g_old[2], 0.5);
 
-            Serial.print("gX: ");Serial.print(g[0]);Serial.print("\t");
-            Serial.print("gY: ");Serial.print(g[1]);Serial.print("\t");
-            Serial.print("gZ: ");Serial.print(g[2]);Serial.println("\t");
+            int16_t x= (data[5]<<8) + data[6];
+            int16_t y= (data[7]<<8) + data[8];
+            int16_t z= (data[9]<<8) + data[10];
+
+
+            //Serial.print("gX: ");Serial.print(x);Serial.print("\t");
+            //Serial.print("gY: ");Serial.print(y);Serial.print("\t");
+            //Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
 
             byte pid[2];
           pid[0] = data[3];
@@ -266,6 +288,7 @@ byte parseMsg() {
           }
           break;
         case 103: {
+
             m_old[0] = m[0];
             m_old[1] = m[1];
             m_old[2] = m[2];
@@ -273,13 +296,14 @@ byte parseMsg() {
             m[1] = lowpassFilter(((data[7]<<8) + data[8]), m_old[1], 0.5);
             m[2] = lowpassFilter(((data[9]<<8) + data[10]), m_old[2], 0.5);
 
-            Serial.print("mX: ");Serial.print(m[0]);Serial.print("\t");
-            Serial.print("mY: ");Serial.print(m[1]);Serial.print("\t");
-            Serial.print("mZ: ");Serial.print(m[2]);Serial.println("\t");
+            int16_t x= (data[5]<<8) + data[6];
+            int16_t y= (data[7]<<8) + data[8];
+            int16_t z= (data[9]<<8) + data[10];
 
-            Serial.print("mX: ");Serial.print(m[0]);
-            Serial.print("mY: ");Serial.print(m[1]);
-            Serial.print("mZ: ");Serial.println(m[2]);
+
+            //Serial.print("mX: ");Serial.print(x);Serial.print("\t");
+            //Serial.print("mY: ");Serial.print(y);Serial.print("\t");
+            //Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
 
           byte pid[2];
           pid[0] = data[3];
@@ -355,17 +379,7 @@ void sync(byte from, byte syn) {
   devicesync[from] = 1;
 }
 
-// IMU Winkel
-float imu_winkel(){
-  return atan2(a[1], a[0]);
-}
-
 //IPS daten****************************************************************
-float lowpassFilter(float x_new, float x_old, float alpha)
-{
-  return (1-alpha) * x_old + alpha * x_new;
-}
-
 
 float xy_winkel(){
   float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
@@ -382,20 +396,26 @@ void lese_position(){
   if(Serial.available() > 0){
     while(Serial.read() ==  2){
       delay(7);
+/*
       x_alt = x;
       y_alt = y;
       z_alt = z;
       x= lowpassFilter((Serial.read() << 8) + Serial.read(), x_alt, 0.5);
       y= lowpassFilter((Serial.read() << 8) + Serial.read(), y_alt, 0.5);
       z= lowpassFilter((Serial.read() << 8) + Serial.read(), z_alt, 0.5);
+*/
+      x= ((Serial.read() << 8) + Serial.read())*0.5 + x*0.5;
+      y= ((Serial.read() << 8) + Serial.read())*0.5 + y*0.5;
+      z= ((Serial.read() << 8) + Serial.read())*0.5 + z*0.5;
+
     }
     
-    Serial.println("Position");
-    Serial.print(x);
+    //Serial.println("Position");
+    Serial.print("x:");Serial.print(x);
     Serial.print(" ");
-    Serial.print(y);
+    Serial.print("y:");Serial.print(y);
     Serial.print(" ");
-    Serial.print(z);
+    Serial.print("z:");Serial.print(z);
     Serial.println(" ");
   }
 }
@@ -423,8 +443,8 @@ int vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
   int N_speed = 250 - abs((ist_winkel-soll_winkel) * P);
   
-  if(N_speed > 0) return N_speed;
-  else return 111;
+  if(N_speed > 0) return -N_speed;
+  else return 0;
   
 }
 
@@ -455,7 +475,24 @@ int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float so
 
 //*************************************************************************
 //******************************************************************************************
+byte Motor[6], regel_param[6];
 
+  //motoren ansteuerungen
+  int8_t Motor_N, Motor_Rot,  Motor_Z,
+    P_h = 400,                //*100
+    I_h = 4,                  //
+    D_h = 0,                  //
+    drehmomentausgleich = 8,  //
+    
+    Soll_h = 130;
+    
+
+  int regel_faktor =1;
+  
+  
+
+long previousMillis = 0;
+byte led_an[6];
 
 
 void setup() {
@@ -474,41 +511,32 @@ void setup() {
   //PID = readPID();
   
   //newPacket((byte)1, (byte)193, Version);
+  regel_param[0] = P_h;
+  regel_param[1] = I_h;
+  regel_param[2] = D_h;
+  regel_param[3] = Soll_h;
+  regel_param[4] = drehmomentausgleich;
+  
+  if(newPacket(54, 30, regel_param))
+  sendPackages();
   
   pinMode(2,INPUT);
 }
-  //motoren ansteuerungen
-  int8_t Motor_N, Motor_Rot,  Motor_Z,
-    P_h = 4,
-    I_h = .04,
-    D_h = 0,
-    Soll_h = 130;
-    
-  byte Motor[6], Hoehe[6];
-  int regel_faktor =1;
-  
-  
-
-long previousMillis = 0;
-byte led_an[6];
-
 
 //******************************************************************************************
 
 void loop(){
   sendPackages();
   
-  Serial.println(imu_winkel());
-  
   lese_position();
   //loop variablen
   float ist_winkel, soll_winkel;
   
-  if(x != x_alt){
-  ist_winkel= xy_winkel();
-  soll_winkel= WP_winkel();
+  if(x_alt != x){
+  ist_winkel= xy_winkel();    Serial.print("  ist_W: ");Serial.print(ist_winkel);
+  soll_winkel= WP_winkel();   Serial.print("  soll_W: ");Serial.println(soll_winkel);
   }
-  
+
   //Manuelle Steuerung*********************************
   #ifdef Manuelle_Steuerung
 const int VERT = A0; // analog
@@ -543,7 +571,7 @@ const int SEL = 2; // digital
   if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
   else Motor_Rot = 0;
   
-  Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
+  //Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
   
   #else
   
@@ -554,18 +582,15 @@ const int SEL = 2; // digital
   Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
   Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
- 
+//  Serial.print("Motor_N: "); Serial.println(Motor_N);
+//  Serial.print("Motor_: "); Serial.println(Motor_N); 
  #endif
- /* 
-  Hoehe[0] = P_h;
-  Hoehe[1] = I_h;
-  Hoehe[2] = D_h;
-  Hoehe[3] = Soll_h;
+
   
-  if(newPacket(54, 30, Hoehe))
-  sendPackages();
-  */
-  Motor[0] = abs(Motor_N);
+
+  
+  Motor[0] = abs(Motor_N);      Serial.print("Motor_N  "); Serial.println(Motor_N);
+
   if(Motor_N > 0) Motor[1] = 0;
   else Motor[1] = 1;
   

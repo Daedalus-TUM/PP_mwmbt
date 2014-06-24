@@ -204,7 +204,7 @@ class Main():
         
         
         #Angabe der Positionen der Stationen; TODO: soll in finaler Version wegfallen, da über GUI eingestellt
-       
+        '''#
         self.stations[0][0] = 0
         self.stations[0][1] = 0
         self.stations[0][2] = 500
@@ -273,7 +273,7 @@ class Main():
         self.stations[10][0] = 0
         self.stations[10][1] = 0
         self.stations[10][2] = 0
-        '''
+        
         # initialisiere Variablen, werden von initfenster beschrieben
         self.team = 0
         self.ttyport = 0
