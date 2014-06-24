@@ -232,7 +232,7 @@ byte parseMsg() {
         
         case 30:{
           
-          P_h = data[5]/100.0;  Serial.print(" P: ");Serial.print(P_h);
+          P_h = data[5]/10.0;  Serial.print(" P: ");Serial.print(P_h);
           I_h = data[6]/100.0;  Serial.print(" I: ");Serial.print(I_h);
           D_h = data[7]/100.0;  Serial.print(" D: ");Serial.print(D_h);
           
