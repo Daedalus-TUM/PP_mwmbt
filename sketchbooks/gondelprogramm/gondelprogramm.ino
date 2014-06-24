@@ -245,12 +245,12 @@ byte parseMsg() {
         
                   //MOTOREN
         case 33:{
-         int N_speed = data[5]*2;        bool N_direction = data[6];
-         int Rot_speed = data[7]*2;      bool Rot_direction = data[8];
-         int Z_speed = data[9]*(-2.2);        bool Z_direction = data[10];
+          N_speed = data[5]*2;        bool N_direction = data[6];
+          Rot_speed = data[7]*2;      bool Rot_direction = data[8];
+          //Z_speed = data[9]*(-2.2);   bool Z_direction = data[10];
          
          Serial.print("N: ");Serial.print(N_speed); Serial.print(" N_dir: ");Serial.print(N_direction);
- //        Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
+         Serial.print("  Rot: ");Serial.print(Rot_speed);Serial.print(" Rot_dir: ");Serial.print(Rot_direction);
  //        Serial.print("  Z: ");Serial.println(Z_speed);Serial.print(" Z_dir: ");Serial.print(Z_direction);
          
         }
@@ -525,7 +525,7 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
-  
+ 
   int height=0;
   Serial.print("loop");
 
@@ -541,7 +541,7 @@ void loop(){
   
   height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
 
-
+  //IMU*******************************************************
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
       accelgyro.setSleepEnabled(false);
@@ -572,7 +572,7 @@ void loop(){
     newPacket((byte)55, (byte)103, m);
     sendPackages();
     while(Mirf.isSending()) {};
-  
+ /* 
   Serial.print("a/g/m:\t");
     Serial.print(ax); Serial.print("\t");
     Serial.print(ay); Serial.print("\t");
@@ -583,10 +583,14 @@ void loop(){
     Serial.print(mx); Serial.print("\t");
     Serial.print(my); Serial.print("\t");
     Serial.println(mz);
+*/
+
 
   
   /*
 
+=======
+>>>>>>> 8b697211689de704cdb6bfe9b3c47af37775cf01
   sendPackages();
   if (newPacket (55, 101, a))
   sendPackages();
@@ -594,10 +598,22 @@ void loop(){
     sendPackages();
   if (newPacket (55, 103, m))
     sendPackages();
-<<<<<<< HEAD
 
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+
+
+  //SEND*****************************************************	
+  sendPackages();
+  while(Mirf.isSending()) {};
+
+  
+  //SEND*****************************************************
+  //sendPackages();
+  //while(Mirf.isSending()) {};
+>>>>>>> 8b697211689de704cdb6bfe9b3c47af37775cf01
 
 */
   //SEND*****************************************************	

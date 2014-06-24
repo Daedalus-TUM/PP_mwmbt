@@ -39,7 +39,7 @@ x_WP= 500;
 
 
 //regel parameter
-float N_P    = 5,
+float N_P    = 100,
       Rot_p  = 3,
       Rot_i  = 0.02,
       Rot_d  = 0.0;
@@ -379,7 +379,12 @@ void sync(byte from, byte syn) {
   devicesync[from] = 1;
 }
 
-//IPS daten****************************************************************
+
+
+
+//********************************************************************
+//IPS daten
+//********************************************************************
 
 float xy_winkel(){
   float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
@@ -409,14 +414,14 @@ void lese_position(){
       z= ((Serial.read() << 8) + Serial.read())*0.5 + z*0.5;
 
     }
-    
+  /*  
     //Serial.println("Position");
     Serial.print("x:");Serial.print(x);
     Serial.print(" ");
     Serial.print("y:");Serial.print(y);
     Serial.print(" ");
     Serial.print("z:");Serial.print(z);
-    Serial.println(" ");
+    Serial.print(" ");*/
   }
 }
 
@@ -439,16 +444,17 @@ float integral(float tm,float tn){
   return dtau;
 }
 
-int vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
+int8_t vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
-  int N_speed = 250 - abs((ist_winkel-soll_winkel) * P);
-  
-  if(N_speed > 0) return -N_speed;
+  int8_t N_speed = 127 - abs((ist_winkel-soll_winkel) * P);
+  Serial.print("  N_:  ");Serial.print(N_speed);
+  Serial.print("  winkel_diff:  ");Serial.println((ist_winkel-soll_winkel));
+  if(N_speed > 0) return N_speed;
   else return 0;
   
 }
 
-int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float soll_winkel){
+int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float soll_winkel){
   
   // Refresh time value
   t_tn = t_tm;
@@ -468,7 +474,7 @@ int drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float so
   int sum_winkel = sum_winkel + winkel_int; 
   //float f = f + diff_winkel;
  
-  int mspeed_Rot= Rot_p * diff + Rot_i * sum_winkel + Rot_d * winkel_slope;
+  int8_t mspeed_Rot= Rot_p * diff + Rot_i * sum_winkel + Rot_d * winkel_slope;
   return mspeed_Rot;
 }
 
@@ -482,6 +488,7 @@ byte Motor[6], regel_param[6];
     P_h = 400,                //*100
     I_h = 4,                  //
     D_h = 0,                  //
+
     drehmomentausgleich = 8,  //
     
     Soll_h = 130;
@@ -492,8 +499,9 @@ byte Motor[6], regel_param[6];
   
 
 long previousMillis = 0;
-byte led_an[6];
+byte led_an[6];  
 
+boolean winkel_flag=0;
 
 void setup() {
   Serial.begin(9600);
@@ -521,7 +529,9 @@ void setup() {
   sendPackages();
   
   pinMode(2,INPUT);
+
 }
+
 
 //******************************************************************************************
 
@@ -565,41 +575,36 @@ const int SEL = 2; // digital
     Motor_Z = 0;
   }
  
-  if((-40 > vertical) || (vertical > 40))Motor_N = int8_t(vertical/4.2);
-  else Motor_N = 0;
-  
-  if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
-  else Motor_Rot = 0;
-  
-  //Serial.print(Motor_N);Serial.print("  ");Serial.print(Motor_Rot);Serial.print("  ");Serial.println(Motor_Z);
-  
-  #else
-  
+  if((-40 > vertical) || (vertical > 40))Motor_N = int8
+  Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+ // Serial.print("Motor_N: "); Serial.print(Motor_N);
+ // Serial.print("  Motor_Rot: "); Serial.println(Motor_Rot); 
+ #else
   
   
   //Regeln********************************************
 
-  Motor_N =     vorwaertsregelung(N_P, ist_winkel, soll_winkel);
+  if(winkel_flag){
+    Motor_N =     -vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
-  Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+    Motor_Rot =   drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+  
 //  Serial.print("Motor_N: "); Serial.println(Motor_N);
 //  Serial.print("Motor_: "); Serial.println(Motor_N); 
+  }
  #endif
 
-  
-
-  
   Motor[0] = abs(Motor_N);      Serial.print("Motor_N  "); Serial.println(Motor_N);
 
   if(Motor_N > 0) Motor[1] = 0;
   else Motor[1] = 1;
   
-  Motor[2] = abs(Motor_Rot * regel_faktor);
+  Motor[2] = abs(Motor_Rot);
   if(Motor_Rot > 0) Motor[3] = 0;
   else Motor[3] = 1;
  
  
-  Motor[4] = abs(Motor_Z * regel_faktor);
+  Motor[4] = abs(Motor_Z);
   if(Motor_Z > 0)Motor[5] = 0;
   else Motor[5] = 1;
   
