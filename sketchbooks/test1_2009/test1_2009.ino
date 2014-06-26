@@ -26,13 +26,13 @@ const byte Version[2] = {VERSIONMAJOR,VERSIONMINOR};
 const byte MAXSTATIONS = 15;
 
 // Global Variables
-int PID = 5;
+int PID = 5,
+  WP_nr = 0;
 
-int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0,
+int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0, z_alt=0,
 
 x,y,z,
-y_WP= 1500,
-x_WP= 500;
+WP[16][2]= {{1500,500},{500,1500}};
 
 
 //regel parameter
@@ -347,12 +347,12 @@ void sync(byte from, byte syn) {
 
 float xy_winkel(){
   float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
-  x_alt=x; y_alt=y;
+
   return winkel;
 }
 
 float WP_winkel(){
-  float winkel= (float) atan((double)(x_WP-x)/(double)(y_WP-y));
+  float winkel= (float) atan((double)(WP[WP_nr][0]-x)/(double)(WP[WP_nr][1]-y));
   return winkel;
 }
 
@@ -360,16 +360,25 @@ void lese_position(){
   if(Serial.available() > 0){
     while(Serial.read() == 2){
       delay(7);
-      x= ((Serial.read() << 8) + Serial.read())*0.5 + x*0.5;
-      y= ((Serial.read() << 8) + Serial.read())*0.5 + y*0.5;
-      z= ((Serial.read() << 8) + Serial.read())*0.5 + z*0.5;
+      int16_t x_temp, y_temp, z_temp;
+      x_temp = (Serial.read() << 8) + Serial.read();
+      y_temp = (Serial.read() << 8) + Serial.read();
+      z_temp = (Serial.read() << 8) + Serial.read();
+      
+        //sprung und 3fach mittelwert filter
+      if(((x - x_temp)*(x - x_temp) + (y - y_temp)*(y - y_temp)) < 900){
+      
+      x= (x_temp)*0.33 + x*0.33 + x_alt*0.33;
+      y= (y_temp)*0.33 + y*0.33 + y_alt*0.33;
+      z= (z_temp)*0.33 + z*0.33 + z_alt*0.33;
+      }
     }
   
 //Serial.println("Position");
 Serial.print("x:");Serial.print(x);
 Serial.print(" ");
 Serial.print("y:");Serial.print(y);
-Serial.print(" ");
+Serial.print("   ");
 //Serial.print("z:");Serial.print(z);
 //Serial.print(" ");
   }
@@ -434,12 +443,12 @@ int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float
 
   //motoren ansteuerungen
   int8_t Motor_N, Motor_Rot, Motor_Z,
-    P_h = 8,                   //*10
+    P_h = 20,                   //*10
     I_h = 55,                   //*100
     D_h = 0,                   //
-    drehmomentausgleich = 6, //
+    drehmomentausgleich = 60, //
     
-    Soll_h = 15;
+    Soll_h = 150;          //cm
     
   byte Motor[6], regel_param[6];
   
@@ -453,7 +462,7 @@ void setup() {
   Serial.begin(9600);
   Serial.print("Team Propellerman Basisstation");
   //init NRF24
-  Mirf.spi = &MirfHardwareSpi;
+  Mirf.spi = &MirfHardwareSpi;                
   Mirf.cePin = 9;
   Mirf.csnPin = 10;
   Mirf.init();
@@ -477,6 +486,7 @@ void setup() {
   
   if(newPacket(54, 30, regel_param))
   sendPackages();
+  
 }
 
 
@@ -486,16 +496,8 @@ void setup() {
 void loop(){
   sendPackages();
   
-  lese_position();
-  //loop variablen
-  float ist_winkel, soll_winkel;
   
-  if(x_alt != x){
-  ist_winkel= xy_winkel();
-  soll_winkel= WP_winkel();
-  winkel_flag = 1;
-  }else winkel_flag = 0;
-  //Manuelle Steuerung*********************************
+  //Manuelle Steuerung**********************************************************
 #ifdef Manuelle_Steuerung
 const int VERT = A0; // analog
 const int HORIZ = A1; // analog
@@ -534,8 +536,35 @@ Serial.print(" select: ");*/
  // Serial.print(" Motor_Rot: "); Serial.println(Motor_Rot);
 #else
   
+  //autonome Steuerung***********************************************************
+  
+  lese_position();
+  //loop variablen
+  float ist_winkel, soll_winkel, WP_WP_winkel;
+  
+  if((x_alt != x)){   //neue koordinaten
+  
+  ist_winkel= xy_winkel();
+  soll_winkel= WP_winkel();
+  x_alt=x; y_alt=y;
+  winkel_flag = 1;
+  
+  
+  WP_WP_winkel = (float) atan((double)(WP[WP_nr + 1][0]- WP[WP_nr][0])/(double)(WP[WP_nr + 1][1]- WP[WP_nr][1]));
+  
+  if((((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 900)
+      && (abs(ist_winkel - WP_WP_winkel) < 0.4) ){
+        WP_nr++;
+        Serial.print(" WP: x ");Serial.print(WP[WP_nr][0]);Serial.print(" y ");Serial.println(WP[WP_nr][1]);
+      }
+  
+  Serial.print("ist winkel: ");Serial.print(ist_winkel);
+  Serial.print("  WP-WP winkel: ");Serial.println(WP_WP_winkel);
+  
+  }else winkel_flag = 0;
   
   //Regeln********************************************
+  
 
   if(winkel_flag){
   Motor_N = -vorwaertsregelung(N_P, ist_winkel, soll_winkel);
@@ -545,7 +574,7 @@ Serial.print(" select: ");*/
  // Serial.print(" ist_W: ");Serial.print(ist_winkel);
  // Serial.print(" soll_W: ");Serial.print(soll_winkel);
   
-  Serial.print(" Motor_N: "); Serial.print(Motor_N);
+ // Serial.print(" Motor_N: "); Serial.print(Motor_N);
  // Serial.print(" Motor_Rot: "); Serial.println(Motor_Rot);
   }
 #endif

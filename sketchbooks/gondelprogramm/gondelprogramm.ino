@@ -466,8 +466,15 @@ float integral(float tm,float tn){
   
  
   // PID-controller
-  if(mspeed_h > 0) return mspeed_h;
-  else return 0;
+  if(mspeed_h > 0)
+  {
+    Z_direction = 0;
+    return mspeed_h;
+  }
+  else{
+    Z_direction = 1;
+    return mspeed_h*0.8;
+  }
   
   }
   
@@ -539,7 +546,8 @@ void loop(){
   i2cStartMeasurement(byte(240));
   delay(70);
   
-  height= (i2cGetMeasurement(byte(240))*0.3) + (height2*0.4) +(height3*0.3);
+
+  height= (i2cGetMeasurement(byte(240))) + (height2*0.4) +(height3*0.3);
 
   //IMU*******************************************************
   //Serial.print("Sleep Enabled: ");
@@ -587,10 +595,7 @@ void loop(){
 
 
   
-  /*
 
-=======
->>>>>>> 8b697211689de704cdb6bfe9b3c47af37775cf01
   sendPackages();
   if (newPacket (55, 101, a))
   sendPackages();
@@ -599,10 +604,7 @@ void loop(){
   if (newPacket (55, 103, m))
     sendPackages();
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
+
 
 
   //SEND*****************************************************	
@@ -613,9 +615,8 @@ void loop(){
   //SEND*****************************************************
   //sendPackages();
   //while(Mirf.isSending()) {};
->>>>>>> 8b697211689de704cdb6bfe9b3c47af37775cf01
 
-*/
+
   //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
@@ -640,8 +641,8 @@ void loop(){
  //    Serial.print(" soll: ");Serial.print(height_soll);
      
   
-//      Serial.print(" hoehe: ");
-//    Serial.println(height);
+      Serial.print(" hoehe: ");
+    Serial.println(height);
 
 
 //Motoren Steuerung*****************************************
@@ -666,6 +667,6 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
  //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
  
  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
-         digitalWrite(8,0);    analogWrite(9,Z_speed);
+         digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
     
 }
