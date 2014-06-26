@@ -18,6 +18,11 @@ int16_t gx, gy, gz;
 int16_t mx, my, mz;
 byte data[12];
 byte sent = 0;
+boolean imu_init = true;
+double imu_winkel_x = 0;
+//double imu_winkel_y = 0;
+//double imu_winkel_z = 0;
+int imu_time;
 
 int16_t h_tn, h_tm;
 int16_t tm, tn, t_tm, t_tn;
@@ -514,6 +519,8 @@ void setup() {
   pinMode(9,OUTPUT);
   pinMode(signal, OUTPUT);  //40kHz signal for IPS
   time = micros();
+  imu_time = time;
+  Serial.println(imu_time);
   Serial.print("t3");
   i2cStartMeasurement(byte(240));
   Serial.print("t4");
@@ -534,8 +541,8 @@ long previousMillis = 0;
 void loop(){
  
   int height=0;
-  Serial.print("loop");
-
+  int ax_old, ay_old, az_old, gx_old, gy_old, gz_old, mx_old, my_old, mz_old;
+  
   ips_signal();
 
   
@@ -553,12 +560,38 @@ void loop(){
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
       accelgyro.setSleepEnabled(false);
+      
   // read raw accel/gyro measurements from device
       accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+      
+  // process imu data    
+      if(imu_init){
+        ax_old = ax; ay_old = ay; az_old = az;
+        gx_old = gx; gy_old = gy; gz_old = gz;
+        ax_old = mx; ay_old = my; az_old = mz;
+        imu_init = false;
+      }
+      
+      if(micros()-imu_time > 100)
+        {
+          Serial.println(imu_time);
+          //calculate angle
+          imu_winkel_x = imu_winkel_x + 0.1*ax/131.0;
+          Serial.print("IMU Winkel: "); Serial.println(imu_winkel_x);
+          //imu_time = micros();
+        }
+        
+      //Serial.print("ax:");Serial.print(ax-ax_old);Serial.print(" ay:");Serial.print(ay-ax_old);Serial.print(" az:");Serial.print(az-ax_old);
+      //Serial.print(" mx:");Serial.print(mx-mx_old);Serial.print(" my:");Serial.print(my-my_old);Serial.print(" mz:");Serial.print(mz-mz_old);
+      //Serial.print(" gx:");Serial.print(gx-gx_old);Serial.print(" gy:");Serial.print(gy-gy_old);Serial.print(" gz:");Serial.println(gz-gz_old);
+      
+      ax_old = ax; ay_old = ay; az_old = az;
+      gx_old = gx; gy_old = gy; gz_old = gz;
+      ax_old = mx; ay_old = my; az_old = mz;
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
-
+  
   byte a[6], g[6], m[6];
     a[0]= (ax & 0xFF00) >> 8;a[1]= (ax & 0x00FF);
     a[2]= (ay & 0xFF00) >> 8;a[3]= (ay & 0x00FF);
@@ -641,8 +674,8 @@ void loop(){
  //    Serial.print(" soll: ");Serial.print(height_soll);
      
   
-      Serial.print(" hoehe: ");
-    Serial.println(height);
+ //     Serial.print(" hoehe: ");
+ //   Serial.println(height);
 
 
 //Motoren Steuerung*****************************************
@@ -660,7 +693,7 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
   
   
-  Serial.print(" dreh:");Serial.println(Drehmoment);
+  //Serial.print(" dreh:");Serial.println(Drehmoment);
          digitalWrite(4,N_direction);    analogWrite(5,N_speed);
          digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
 
