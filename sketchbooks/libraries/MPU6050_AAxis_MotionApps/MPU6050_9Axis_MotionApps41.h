@@ -707,13 +707,17 @@ uint8_t MPU6050::dmpGetGyro(int16_t *data, const uint8_t* packet) {
     return 0;
 }
 uint8_t MPU6050::dmpGetGyro(VectorInt16 *v, const uint8_t* packet) {
+
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
+
     if (packet == 0) packet = dmpPacketBuffer;
+
     v -> x = (packet[16] << 8) + packet[17];
     v -> y = (packet[20] << 8) + packet[21];
     v -> z = (packet[24] << 8) + packet[25];
     return 0;
 }
+
 uint8_t MPU6050::dmpGetMag(int16_t *data, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
@@ -722,7 +726,7 @@ uint8_t MPU6050::dmpGetMag(int16_t *data, const uint8_t* packet) {
     data[2] = (packet[32] << 8) + packet[33];
     return 0;
 }
-uint8_t MPU6050::dmpGetMag(VectorInt16 *v, const uint8_t* packet) {
+    uint8_t MPU6050::dmpGetMag(VectorInt16 *v, const uint8_t* packet) {
     // TODO: accommodate different arrangements of sent data (ONLY default supported now)
     if (packet == 0) packet = dmpPacketBuffer;
     v -> x = (packet[28] << 8) + packet[29];
@@ -730,6 +734,7 @@ uint8_t MPU6050::dmpGetMag(VectorInt16 *v, const uint8_t* packet) {
     v -> z = (packet[32] << 8) + packet[33];
     return 0;
 }
+
 // uint8_t MPU6050::dmpSetLinearAccelFilterCoefficient(float coef);
 // uint8_t MPU6050::dmpGetLinearAccel(long *data, const uint8_t* packet);
 uint8_t MPU6050::dmpGetLinearAccel(VectorInt16 *v, VectorInt16 *vRaw, VectorFloat *gravity) {
