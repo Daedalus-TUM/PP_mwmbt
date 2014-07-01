@@ -685,7 +685,7 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
   int rotSpeed;
   bool rotDir;
- rotSpeed = ((1-(2*Rot_direction))*Rot_speed) - (Z_speed * Drehmoment);
+ rotSpeed = ((1-(2*Rot_direction))*Rot_speed) - (((1-(2*Z_direction))*Z_speed)* Drehmoment);
  if(rotSpeed > 0)rotDir=0;
  else rotDir=1;
 

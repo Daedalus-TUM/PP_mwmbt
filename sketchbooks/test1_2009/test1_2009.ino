@@ -345,22 +345,34 @@ void sync(byte from, byte syn) {
 //IPS daten
 //********************************************************************
 
-float xy_winkel(){
-  float winkel= (float) atan((double)(x-x_alt)/(double)(y-y_alt));
+float winkelDiff(float W1,float W2){
+  float W =W1-W2;
+  if(W < -180){
+    W= -(360 + W);
+  }else{
+    if(W > 180)W=360-W;
+  }
+  return W;
+}
 
+float xy_winkel(){
+  float winkel = (float) atan((double)(x-x_alt)/(double)(y-y_alt));
+  winkel = winkel*360/(2*3.14159);
   return winkel;
 }
 
 float WP_winkel(){
   float winkel= (float) atan((double)(WP[WP_nr][0]-x)/(double)(WP[WP_nr][1]-y));
+  winkel = winkel*360/(2*3.14159);
   return winkel;
 }
 
 void lese_position(){
   if(Serial.available() > 0){
+    int16_t x_temp, y_temp, z_temp;
     while(Serial.read() == 2){
-      delay(7);
-      int16_t x_temp, y_temp, z_temp;
+      delay(9);
+      
       x_temp = (Serial.read() << 8) + Serial.read();
       y_temp = (Serial.read() << 8) + Serial.read();
       z_temp = (Serial.read() << 8) + Serial.read();
@@ -368,13 +380,13 @@ void lese_position(){
         //sprung und 3fach mittelwert filter
       if(((x - x_temp)*(x - x_temp) + (y - y_temp)*(y - y_temp)) < 900){
       
-      x= (x_temp)*0.33 + x*0.33 + x_alt*0.33;
-      y= (y_temp)*0.33 + y*0.33 + y_alt*0.33;
-      z= (z_temp)*0.33 + z*0.33 + z_alt*0.33;
+      x= (x_temp)*0.7 + x*0.2 + x_alt*0.1;
+      y= (y_temp)*0.7 + y*0.2 + y_alt*0.1;
+      z= (z_temp)*0.7 + z*0.2 + z_alt*0.1;
       }
     }
   
-//Serial.println("Position");
+Serial.println("Position");
 Serial.print("x:");Serial.print(x);
 Serial.print(" ");
 Serial.print("y:");Serial.print(y);
@@ -407,11 +419,11 @@ int8_t vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
   int8_t N_speed = 127 - abs((ist_winkel-soll_winkel) * P);
   Serial.print(" N_: ");Serial.print(N_speed);
-  Serial.print(" winkel_diff: ");Serial.println((ist_winkel-soll_winkel));
+  Serial.print(" winkel_diff: ");Serial.println(winkelDiff(ist_winkel,soll_winkel));
   if(N_speed > 0) return N_speed;
   else return 0;
   
-}
+}  
 
 int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float soll_winkel){
   
@@ -423,7 +435,7 @@ int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float
   winkel_tm = ist_winkel;
   
   // calculates difference
-  float diff = (ist_winkel-soll_winkel);
+  float diff = winkelDiff(ist_winkel,soll_winkel);
   
   // calculate slope
   float winkel_slope = derivation(winkel_tm, winkel_tn);
@@ -549,8 +561,10 @@ Serial.print(" select: ");*/
   x_alt=x; y_alt=y;
   winkel_flag = 1;
   
+  Serial.print("soll winkel: ");Serial.println(soll_winkel);
   
   WP_WP_winkel = (float) atan((double)(WP[WP_nr + 1][0]- WP[WP_nr][0])/(double)(WP[WP_nr + 1][1]- WP[WP_nr][1]));
+  WP_WP_winkel = WP_WP_winkel *360/(2*3.14159);
   
   if((((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 900)
       && (abs(ist_winkel - WP_WP_winkel) < 0.4) ){
@@ -558,8 +572,8 @@ Serial.print(" select: ");*/
         Serial.print(" WP: x ");Serial.print(WP[WP_nr][0]);Serial.print(" y ");Serial.println(WP[WP_nr][1]);
       }
   
-  Serial.print("ist winkel: ");Serial.print(ist_winkel);
-  Serial.print("  WP-WP winkel: ");Serial.println(WP_WP_winkel);
+//  Serial.print("ist winkel: ");Serial.print(ist_winkel);
+//  Serial.print("  WP-WP winkel: ");Serial.println(WP_WP_winkel);
   
   }else winkel_flag = 0;
   
