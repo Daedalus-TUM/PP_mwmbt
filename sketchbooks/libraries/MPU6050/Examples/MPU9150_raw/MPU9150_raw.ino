@@ -58,7 +58,7 @@ void setup() {
     // initialize serial communication
     // (38400 chosen because it works as well at 8MHz as it does at 16MHz, but
     // it's really up to you depending on your project)
-    Serial.begin(38400);
+    Serial.begin(9600);
 
     // initialize device
     Serial.println("Initializing I2C devices...");
@@ -74,7 +74,7 @@ void setup() {
 
 void loop() {
     // read raw accel/gyro measurements from device
-    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
+    accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);                    // hier werden die Daten ausgelesen
 
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);

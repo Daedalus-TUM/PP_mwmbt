@@ -227,9 +227,9 @@ byte parseMsg() {
             int16_t y= (data[7]<<8) + data[8];
             int16_t z= (data[9]<<8) + data[10];
 
-// Serial.print("aX: ");Serial.print(x);Serial.print("\t");
-// Serial.print("aY: ");Serial.print(y);Serial.print("\t");
-// Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
+ Serial.print("aX: ");Serial.print(x);Serial.print("\t");
+ Serial.print("aY: ");Serial.print(y);Serial.print("\t");
+ Serial.print("aZ: ");Serial.print(z);Serial.println("\t");
 
 
           byte pid[2];
@@ -379,8 +379,8 @@ Serial.print("x:");Serial.print(x);
 Serial.print(" ");
 Serial.print("y:");Serial.print(y);
 Serial.print("   ");
-//Serial.print("z:");Serial.print(z);
-//Serial.print(" ");
+Serial.print("z:");Serial.print(z);
+Serial.print(" ");
   }
 }
 
