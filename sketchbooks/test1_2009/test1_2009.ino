@@ -33,7 +33,7 @@ int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0, z_alt=0,
 
 x,y,z,
 WP[16][2]= {{1500,500},{500,1500}};
-
+  float ist_winkel, soll_winkel, WP_WP_winkel;
 
 //regel parameter
 float N_P = 100,
@@ -219,6 +219,11 @@ byte parseMsg() {
           
           
           newPacket(from, (byte)192, pid);
+          }
+          break;
+          
+        case 100:{
+          ist_winkel = ((data[5]<<8) + (data[6] << 8))/10;
           }
           break;
           
@@ -552,11 +557,11 @@ Serial.print(" select: ");*/
   
   lese_position();
   //loop variablen
-  float ist_winkel, soll_winkel, WP_WP_winkel;
+
   
   if((x_alt != x)){   //neue koordinaten
   
-  ist_winkel= xy_winkel();
+  //ist_winkel= xy_winkel();
   soll_winkel= WP_winkel();
   x_alt=x; y_alt=y;
   winkel_flag = 1;

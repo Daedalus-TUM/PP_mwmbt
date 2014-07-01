@@ -30,7 +30,7 @@ int16_t a1, a2, a3, g1, g2, g3, m1, m2, m3; // raw data arrays reading
 uint16_t count = 0; // used to control display output rate
 uint16_t delt_t = 0; // used to control display output rate
 uint16_t mcount = 0; // used to control display output rate
-uint8_t MagRate; // read rate for magnetometer data
+uint8_t MagRate; // read rate for magnetometer datax^xx^xX
 
 float pitch, yaw, roll;
 float deltat = 0.0f; // integration interval for both filter schemes
@@ -774,7 +774,7 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
   
   //Serial.print(" dreh:");Serial.println(Drehmoment);
          digitalWrite(4,N_direction);    analogWrite(5,N_speed);
-         digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
+  //       digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
 
  //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
  
@@ -873,7 +873,16 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     
 
     }
+    uint16_t Y;
+    byte w[6];
     
+    Y = (int)yaw*10;
+    
+    w[0] = yaw & 0xFF;
+    w[1] = (yaw >> 2) & 0xFF;
+    
+    if(newPacket(54, 100, w))
+  sendPackages();
 
     }
             
