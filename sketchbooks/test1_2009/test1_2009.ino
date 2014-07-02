@@ -37,8 +37,8 @@ WP[16][2]= {{1500,500},{500,1500}};
 
 //regel parameter
 float N_P = 100,
-      Rot_p = 3,
-      Rot_i = 0.02,
+      Rot_p = 1.5,
+      Rot_i = 0.0,
       Rot_d = 0;
 
 class Packet {
@@ -223,7 +223,8 @@ byte parseMsg() {
           break;
           
         case 100:{
-          ist_winkel = ((data[5]<<8) + (data[6] << 8))/10;
+          ist_winkel = ((data[5]) + (data[6] << 8))/10;
+          Serial.print("Winkel: ");Serial.print(ist_winkel);
           }
           break;
           
@@ -441,6 +442,7 @@ int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float
   
   // calculates difference
   float diff = winkelDiff(ist_winkel,soll_winkel);
+  Serial.print("winkel differenz:");Serial.print(diff);
   
   // calculate slope
   float winkel_slope = derivation(winkel_tm, winkel_tn);
@@ -583,7 +585,8 @@ Serial.print(" select: ");*/
   }else winkel_flag = 0;
   
   //Regeln********************************************
-  
+  Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, 30);//zum testen!*********///////
+  Serial.print("mot_rot");Serial.println(Motor_Rot);
 
   if(winkel_flag){
   Motor_N = -vorwaertsregelung(N_P, ist_winkel, soll_winkel);

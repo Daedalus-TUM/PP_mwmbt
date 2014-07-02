@@ -1,3 +1,9 @@
+#include <nRF24L01.h>
+#include <MirfHardwareSpiDriver.h>
+#include <Mirf.h>
+#include <MirfSpiDriver.h>
+
+
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #include "Wire.h"
@@ -615,7 +621,7 @@ float integral(float tm,float tn){
 void setup() {
   Serial.begin(9600);
  
- 
+ delay(2000);
 
   Wire.begin();
 
@@ -660,6 +666,7 @@ void setup() {
 ///////////////////////////////////////////////////IMUU/////////////////////////////////////////////////////
 
 {
+  
 
   Serial.begin(9600); // Start serial at 38400 bps
 ;
@@ -697,9 +704,10 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
- 
-  int height=0;
 
+  
+  int height=0;
+ //Serial.println("t1 ");
   //Höhe******************************************************
   
   height3 = height2;
@@ -715,13 +723,13 @@ void loop(){
   //Serial.println(accelgyro.getSleepEnabled());
       accelgyro.setSleepEnabled(false);
    
-
+//Serial.println("t2 ");
 
   //SEND*****************************************************	
   sendPackages();
   while(Mirf.isSending()) {};
 
-  
+  //Serial.println("t3 ");
   //SEND*****************************************************
   //sendPackages();
   //while(Mirf.isSending()) {};
@@ -735,6 +743,7 @@ void loop(){
   if(Mirf.dataReady()){
     parseMsg();
   }
+  //Serial.println("t4 ");
 /*
   unsigned long currentMillis = millis();
  
@@ -759,7 +768,7 @@ void loop(){
 
 Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
-
+//Serial.println("t5 ");
   int rotSpeed;
   bool rotDir;
 
@@ -774,12 +783,14 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
   
   //Serial.print(" dreh:");Serial.println(Drehmoment);
          digitalWrite(4,N_direction);    analogWrite(5,N_speed);
-  //       digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
+         digitalWrite(7,rotDir);  analogWrite(6,rotSpeed);
 
  //        digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
  
  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
          digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
+         
+         //Serial.println("t6 ");
          
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////IMUU/////////////////////////////////////////////////////
@@ -829,7 +840,7 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     // Serial print and/or display at 0.5 s rate independent of data rates
     delt_t = millis() - count;
     if (delt_t > 500) { // update LCD once per half-second independent of read rate
-
+/*
     Serial.print("ax = "); Serial.print((int)1000*ax);
     Serial.print(" ay = "); Serial.print((int)1000*ay);
     Serial.print(" az = "); Serial.print((int)1000*az); Serial.println(" mg");
@@ -844,7 +855,7 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     Serial.print(" qx = "); Serial.print(q[1]);
     Serial.print(" qy = "); Serial.print(q[2]);
     Serial.print(" qz = "); Serial.println(q[3]);
-                   
+*/                   
     
   // Define output variables from updated quaternion---these are Tait-Bryan angles, commonly used in aircraft orientation.
   // In this coordinate system, the positive z-axis is down toward Earth.
@@ -862,27 +873,30 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     yaw *= 180.0f / PI - 13.8; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
     roll *= 180.0f / PI;
 
-    Serial.print("Yaw, Pitch, Roll: ");
-    Serial.print(yaw, 2);
-    Serial.print(", ");
-    Serial.print(pitch, 2);
-    Serial.print(", ");
-    Serial.println(roll, 2);
+   // Serial.print("Yaw, Pitch, Roll: ");
+   // Serial.print(yaw, 2);
+   // Serial.print(", ");
+   // Serial.print(pitch, 2);
+   // Serial.print(", ");
+   // Serial.println(roll, 2);
     
-    Serial.print("rate = "); Serial.print((float)1.0f/deltat, 2); Serial.println(" Hz");
+   // Serial.print("rate = "); Serial.print((float)1.0f/deltat, 2); Serial.println(" Hz");
     
 
     }
+    //Serial.println("t7 ");
     uint16_t Y;
     byte w[6];
     
     Y = (int)yaw*10;
+    Serial.print("Yaw: ");
+    Serial.println(yaw, 2);
+    w[0] = Y & 0xFF;
+    w[1] = (Y >> 8) & 0xFF;
     
-    w[0] = yaw & 0xFF;
-    w[1] = (yaw >> 2) & 0xFF;
-    
-    if(newPacket(54, 100, w))
+    if(newPacket(55, 100, w)){
   sendPackages();
+    }
 
     }
             
