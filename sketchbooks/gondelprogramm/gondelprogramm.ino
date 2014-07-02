@@ -1,16 +1,42 @@
-// Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
+#include <nRF24L01.h>
+#include <MirfHardwareSpiDriver.h>
+#include <Mirf.h>
+#include <MirfSpiDriver.h>
+
+
+
+#include <MPU6050_9Axis_MotionApps41.h>
+#include <MPU6050.h>
+#include <helper_3dmath.h>
+
+
+
+
+
+
+
+
+
+
+
+
+#include <Wire.h>
+#include "I2Cdev.h"
+#include "MPU6050_9Axis_MotionApps41.h"
+// Ardu
+//ino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
-#include "Wire.h"
+
 
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
-#include "I2Cdev.h"
+
 // class default I2C address is 0x68
 // specific I2C addresses may be passed as a parameter here
 // AD0 low = 0x68 (default for InvenSense evaluation board)
 // AD0 high = 0x69
 //für Magnetometer
-#include "MPU6050_9Axis_MotionApps41.h"
+
 
 MPU6050 accelgyro(0x69);  //aus dem sleep mode wecken
  //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -878,8 +904,8 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     
     Y = (int)yaw*10;
     
-    w[0] = yaw & 0xFF;
-    w[1] = (yaw >> 2) & 0xFF;
+    w[0] = Y & 0xFF;
+    w[1] = (Y >> 2) & 0xFF;
     
     if(newPacket(54, 100, w))
   sendPackages();

@@ -1,102 +1,25 @@
+
+
+
+#include <Wire.h>
+#include "I2Cdev.h"
+#include "MPU6050_9Axis_MotionApps41.h"
 #include <MPU6050_9Axis_MotionApps41.h>
+#include <MPU6050_6Axis_MotionApps20.h>
 #include <MPU6050.h>
 #include <helper_3dmath.h>
 
 
 
 
-/*****************************************************************
-MPU9150_AHRS_directdata.ino
-SFE_MPU9150 Library AHRS Data Fusion Example Code
-Kris Winer for Sparkfun Electronics
-Original Creation Date: April 8, 2014
-https://github.com/sparkfun/MPU9150_Breakout
-
-The MPU9150 is a versatile 9DOF sensor. It has a built-in
-accelerometer, gyroscope, and magnetometer that
-functions over I2C. It is very similar to the 6 DoF MPU6050 for which an extensive library has already been built.
-Most of the function of the MPU9150 can utilize the MPU6050 library.
-
-This Arduino sketch utilizes Jeff Rowberg's MPU6050 library to generate the basic sensor data
-for use in two sensor fusion algorithms becoming increasingly popular with DIY quadcopter and robotics engineers.
-I have added and slightly modified Jeff's library here.
-
-This simple sketch will demo the following:
-* How to create a MPU6050 object, using a constructor (global variables section).
-* How to use the initialize() function of the MPU6050 class.
-* How to read the gyroscope, accelerometer, and magnetometer
-using the readAcceleration(), readRotation(), and readMag() functions and the
-gx, gy, gz, ax, ay, az, mx, my, and mz variables.
-* How to calculate actual acceleration, rotation speed, magnetic
-field strength using the specified ranges as described in the data sheet:
-http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/IMU/PS-MPU-9150A.pdf
-and
-http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/IMU/RM-MPU-9150A-00.pdf.
-In addition, the sketch will demo:
-* How to check for data updates using the data ready status register
-* How to display output at a rate different from the sensor data update and fusion filter update rates
-* How to specify the accelerometer and gyro sampling and bandwidth rates
-* How to use the data from the MPU9150 to fuse the sensor data into a quaternion representation of the sensor frame
-orientation relative to a fixed Earth frame providing absolute orientation information for subsequent use.
-* An example of how to use the quaternion data to generate standard aircraft orientation data in the form of
-Tait-Bryan angles representing the sensor yaw, pitch, and roll angles suitable for any vehicle stablization control application.
-
-Hardware setup: This library supports communicating with the
-MPU9150 over I2C. These are the only connections that need to be made:
-MPU9150 --------- Arduino
-SCL ---------- SCL (A5 on older 'Duinos')
-SDA ---------- SDA (A4 on older 'Duinos')
-VDD ------------- 3.3V
-GND ------------- GND
-
-The LSM9DS0 has a maximum voltage of 3.5V. Make sure you power it
-off the 3.3V rail! And either use level shifters between SCL
-and SDA or just use a 3.3V Arduino Pro.
-
-In addition, this sketch uses a Nokia 5110 48 x 84 pixel display which requires
-digital pins 5 - 9 described below. If using SPI you might need to press one of the A0 - A3 pins
-into service as a digital input instead.
-
-Development environment specifics:
-IDE: Arduino 1.0.5
-Hardware Platform: Arduino Pro 3.3V/8MHz
-MPU9150 Breakout Version: 1.0
-
-This code is beerware. If you see me (or any other SparkFun
-employee) at the local, and you've found our code helpful, please
-buy us a round!
-
-Distributed as-is; no warranty is given.
-*****************************************************************/
-
-#include <Wire.h>
-#include "I2Cdev.h"
-#include "MPU6050_9Axis_MotionApps41.h"
-//#include <Adafruit_GFX.h>
-//#include <Adafruit_PCD8544.h>
-
-// Using NOKIA 5110 monochrome 84 x 48 pixel display
-// pin 9 - Serial clock out (SCLK)
-// pin 8 - Serial data out (DIN)
-// pin 7 - Data/Command select (D/C)
-// pin 5 - LCD chip select (CS)
-// pin 6 - LCD reset (RST)
-//Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
-
 // Declare device MPU6050 class
 MPU6050 mpu;
 
-// global constants for 9 DoF fusion and AHRS (Attitude and Heading Reference System)
+// global constants 
 #define GyroMeasError PI * (40.0f / 180.0f) // gyroscope measurement error in rads/s (shown as 3 deg/s)
 #define GyroMeasDrift PI * (0.0f / 180.0f) // gyroscope measurement drift in rad/s/s (shown as 0.0 deg/s/s)
-// There is a tradeoff in the beta parameter between accuracy and response speed.
-// In the original Madgwick study, beta of 0.041 (corresponding to GyroMeasError of 2.7 degrees/s) was found to give optimal accuracy.
-// However, with this value, the LSM9SD0 response time is about 10 seconds to a stable initial quaternion.
-// Subsequent changes also require a longish lag time to a stable output, not fast enough for a quadcopter or robot car!
-// By increasing beta (GyroMeasError) by about a factor of fifteen, the response time constant is reduced to ~2 sec
-// I haven't noticed any reduction in solution accuracy. This is essentially the I coefficient in a PID control sense;
-// the bigger the feedback coefficient, the faster the solution converges, usually at the expense of accuracy.
-// In any case, this is the free parameter in the Madgwick filtering and fusion scheme.
+
+
 #define beta sqrt(3.0f / 4.0f) * GyroMeasError // compute beta
 #define zeta sqrt(3.0f / 4.0f) * GyroMeasDrift // compute zeta, the other free parameter in the Madgwick scheme usually set to a small or zero value
 #define Kp 2.0f * 5.0f // these are the free parameters in the Mahony filter and fusion scheme, Kp for proportional feedback, Ki for integral
@@ -140,10 +63,10 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
             float q4q4 = q4 * q4;
 
             // Normalise accelerometer measurement
-            norm = sqrt(ax * ax + ay * ay + az * az);
-            if (norm == 0.0f) return; // handle NaN
+            norm = sqrt(ax * ax + ay * ay + az * az);      //Norm nehmen
+            if (norm == 0.0f) return; // handle NaN      
             norm = 1.0f / norm; // use reciprocal for division
-            ax *= norm;
+            ax *= norm;    //was heißt *=   -> kobinierte Zuweisung
             ay *= norm;
             az *= norm;
 
@@ -213,7 +136,7 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
 void setup()
 {
   Serial.begin(115200); // Start serial at 38400 bps
-    Wire.begin();
+
     // initialize MPU6050 device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
