@@ -1,11 +1,6 @@
-#include <MPU6050_9Axis_MotionApps41.h>
-#include <MPU6050.h>
-#include <helper_3dmath.h>
 
 
-
-
-/*****************************************************************
+  /*****************************************************************
 MPU9150_AHRS_directdata.ino
 SFE_MPU9150 Library AHRS Data Fusion Example Code
 Kris Winer for Sparkfun Electronics
@@ -72,18 +67,11 @@ Distributed as-is; no warranty is given.
 #include <Wire.h>
 #include "I2Cdev.h"
 #include "MPU6050_9Axis_MotionApps41.h"
-//#include <Adafruit_GFX.h>
-//#include <Adafruit_PCD8544.h>
+#include <MPU6050_9Axis_MotionApps41.h>
+#include <MPU6050.h>
 
-// Using NOKIA 5110 monochrome 84 x 48 pixel display
-// pin 9 - Serial clock out (SCLK)
-// pin 8 - Serial data out (DIN)
-// pin 7 - Data/Command select (D/C)
-// pin 5 - LCD chip select (CS)
-// pin 6 - LCD reset (RST)
-//Adafruit_PCD8544 display = Adafruit_PCD8544(9, 8, 7, 5, 6);
 
-// Declare device MPU6050 class
+
 MPU6050 mpu;
 
 // global constants for 9 DoF fusion and AHRS (Attitude and Heading Reference System)
@@ -213,7 +201,7 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
 void setup()
 {
   Serial.begin(115200); // Start serial at 38400 bps
-    Wire.begin();
+
     // initialize MPU6050 device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
