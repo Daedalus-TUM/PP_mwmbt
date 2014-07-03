@@ -877,33 +877,34 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     yaw *= 180.0f / PI - 13.8; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
     roll *= 180.0f / PI;
 
-   // Serial.print("Yaw, Pitch, Roll: ");
-   // Serial.print(yaw, 2);
-   // Serial.print(", ");
-   // Serial.print(pitch, 2);
-   // Serial.print(", ");
-   // Serial.println(roll, 2);
+    Serial.print("Yaw, Pitch, Roll: ");
+    Serial.print(yaw, 2);
+    Serial.print(", ");
+    Serial.print(pitch, 2);
+    Serial.print(", ");
+    Serial.println(roll, 2);
     
    // Serial.print("rate = "); Serial.print((float)1.0f/deltat, 2); Serial.println(" Hz");
     
 
     }
     //Serial.println("t7 ");
-    uint16_t Y;
+    uint16_t Y,P,R;
     byte w[6];
     
-    Y = (int)yaw*10;
-    Serial.print("Yaw: ");
-    Serial.println(yaw, 2);
+    Y = (int)yaw*10;P = (int)pitch*10;R = (int)roll*10;
+    //Serial.print("Yaw: ");
+    //Serial.println(yaw, 2);
     w[0] = Y & 0xFF;
     w[1] = (Y >> 8) & 0xFF;
+    w[2] = P & 0xFF;
+    w[3] = (P >> 8) & 0xFF;
+    w[4] = R & 0xFF;
+    w[5] = (R >> 8) & 0xFF;
     
     if(newPacket(55, 100, w)){
-
   sendPackages();
     }
 
-    }
-            
-    
+}
 

@@ -423,7 +423,7 @@ float integral(float tm,float tn){
 
 int8_t vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
-  int8_t N_speed = 127 - abs((ist_winkel-soll_winkel) * P);
+  int8_t N_speed = 127 - abs((winkelDiff(ist_winkel,soll_winkel)) * P);
   Serial.print(" N_: ");Serial.print(N_speed);
   Serial.print(" winkel_diff: ");Serial.println(winkelDiff(ist_winkel,soll_winkel));
   if(N_speed > 0) return N_speed;
@@ -569,6 +569,8 @@ Serial.print(" select: ");*/
   winkel_flag = 1;
   
   Serial.print("soll winkel: ");Serial.println(soll_winkel);
+  
+  //WEGPUNKTE FLUG************************************
   
   WP_WP_winkel = (float) atan((double)(WP[WP_nr + 1][0]- WP[WP_nr][0])/(double)(WP[WP_nr + 1][1]- WP[WP_nr][1]));
   WP_WP_winkel = WP_WP_winkel *360/(2*3.14159);
