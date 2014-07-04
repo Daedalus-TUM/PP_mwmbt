@@ -31,15 +31,18 @@ int PID = 5,
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0, z_alt=0,
 
+gx, gy, gz,
 x,y,z,
 WP[16][2]= {{1500,500},{500,1500}};
-  float ist_winkel, soll_winkel, WP_WP_winkel;
+  float ist_winkel, soll_winkel, WP_WP_winkel, WP_time;
 
 //regel parameter
 float N_P = 100,
       Rot_p = 1.5,
       Rot_i = 0.0,
-      Rot_d = 0;
+      Rot_d = 0,
+      Pgy = 0;
+      
 
 class Packet {
   //byte time;
@@ -223,15 +226,19 @@ byte parseMsg() {
           break;
           
         case 100:{
-          ist_winkel = ((data[5]) + (data[6] << 8))/10;
-          Serial.print("Winkel: ");Serial.print(ist_winkel);
+          float yaw = ((data[5]) + (data[6] << 8))/10;
+          Serial.print("Winkel_yaw: ");Serial.print(yaw);
+          float pitch =((data[7]) + (data[8] << 8))/10;
+          Serial.print("  Winkel_pitch: ");Serial.print(pitch);
+           ist_winkel =((data[9]) + (data[10] << 8))/10;
+          Serial.print("  Winkel_roll: ");Serial.println(ist_winkel);
           }
           break;
           
         case 101: {
-            int16_t x= (data[5]<<8) + data[6];
-            int16_t y= (data[7]<<8) + data[8];
-            int16_t z= (data[9]<<8) + data[10];
+            //int16_t x= (data[5]<<8) + data[6];
+            //int16_t y= (data[7]<<8) + data[8];
+            //int16_t z= (data[9]<<8) + data[10];
 
  Serial.print("aX: ");Serial.print(x);Serial.print("\t");
  Serial.print("aY: ");Serial.print(y);Serial.print("\t");
@@ -245,20 +252,17 @@ byte parseMsg() {
           newPacket(from, (byte)192, pid);
           }
           break;
+          
         case 102: {
-            int16_t x= (data[5]<<8) + data[6];
-            int16_t y= (data[7]<<8) + data[8];
-            int16_t z= (data[9]<<8) + data[10];
+             gx= ((data[5]<<8) + data[6])/10;
+             gy= ((data[7]<<8) + data[8])/10;
+             gz= ((data[9]<<8) + data[10])/10;
 
 // Serial.print("gX: ");Serial.print(x);Serial.print("\t");
-// Serial.print("gY: ");Serial.print(y);Serial.print("\t");
+ Serial.print("gY: ");Serial.print(gy);Serial.println("\t");
 // Serial.print("gZ: ");Serial.print(z);Serial.println("\t");
 
-            byte pid[2];
-          pid[0] = data[3];
-          pid[1] = data[4];
-          byte from = data[1];
-          newPacket(from, (byte)192, pid);
+            
           }
           break;
         case 103: {
@@ -465,7 +469,7 @@ int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float
     P_h = 20,                   //*10
     I_h = 55,                   //*100
     D_h = 0,                   //
-    drehmomentausgleich = 60, //
+    drehmomentausgleich = 20, //60
     
     Soll_h = 150;          //cm
     
@@ -587,13 +591,16 @@ Serial.print(" select: ");*/
   }else winkel_flag = 0;
   
   //Regeln********************************************
-  Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, 30);//zum testen!*********///////
-  Serial.print("mot_rot");Serial.println(Motor_Rot);
+  //Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, 30);//zum testen!*********///////
+  //Motor_Rot += gy * Pgy;//Serial.print("gyr: ");Serial.println(gy);
+  //Serial.print("  mot_rot");Serial.println(Motor_Rot);
 
   if(winkel_flag){
   Motor_N = -vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   
   Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+  
+  //Motor_Rot += gy * Pgy;
   
  // Serial.print(" ist_W: ");Serial.print(ist_winkel);
  // Serial.print(" soll_W: ");Serial.print(soll_winkel);
@@ -601,6 +608,33 @@ Serial.print(" select: ");*/
  // Serial.print(" Motor_N: "); Serial.print(Motor_N);
  // Serial.print(" Motor_Rot: "); Serial.println(Motor_Rot);
   }
+  
+  
+  
+  //notfall Regelung**********************************
+  /*
+  if(((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 1600){
+    if(Motor_N > 5){
+      WP_time = millis(); Motor_N = -100;
+  } 
+    if((millis() - WP_time) > 2000)Motor_N = 0;
+    
+    float ist_WP_winkel = atan((float)(x - WP[WP_nr + 1][0])/(float)(y - WP[WP_nr + 1][1])),
+          WP_ist_winkel = atan((float)(WP[WP_nr - 1][0] - x)/(float)(WP[WP_nr - 1][1] - y));
+    int Rtime = 20 * winkelDiff(WP_ist_winkel,ist_WP_winkel);
+    
+    if((millis() - WP_time) < Rtime)Motor_Rot = 100;
+    else{
+      if((millis() - WP_time) < 2*Rtime)Motor_Rot = -100;
+      else{
+        Motor_Rot = 0; WP_nr++;Motor_N = 100;
+      }
+    }
+    
+    
+  }
+  */
+  
 #endif
   
 
@@ -625,6 +659,7 @@ Serial.print(" select: ");*/
   if(Mirf.dataReady()){
     parseMsg();
   }
+  
 
   unsigned long currentMillis = millis();
  /*

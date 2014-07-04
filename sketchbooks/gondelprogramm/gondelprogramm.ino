@@ -876,21 +876,22 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     pitch *= 180.0f / PI;
     yaw *= 180.0f / PI - 13.8; // Declination at Danville, California is 13 degrees 48 minutes and 47 seconds on 2014-04-04
     roll *= 180.0f / PI;
-
+/*
     Serial.print("Yaw, Pitch, Roll: ");
     Serial.print(yaw, 2);
     Serial.print(", ");
     Serial.print(pitch, 2);
     Serial.print(", ");
     Serial.println(roll, 2);
-    
+*/    
    // Serial.print("rate = "); Serial.print((float)1.0f/deltat, 2); Serial.println(" Hz");
     
 
     }
     //Serial.println("t7 ");
     uint16_t Y,P,R;
-    byte w[6];
+    int16_t Gx=gx*10,Gy=gy*10,Gz=gz*10;
+    byte w[6],g[6];
     
     Y = (int)yaw*10;P = (int)pitch*10;R = (int)roll*10;
     //Serial.print("Yaw: ");
@@ -904,7 +905,17 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     
     if(newPacket(55, 100, w)){
   sendPackages();
+  while(Mirf.isSending()) {};
     }
-
+    g[0]= (Gx >> 8) & 0xFF; g[1]= Gx & 0xFF;
+    g[2]= (Gy >> 8) & 0xFF; g[3]= Gy & 0xFF;
+    g[4]= (Gz >> 8) & 0xFF; g[5]= Gz & 0xFF;
+    if(newPacket(55, 102, g)){
+    sendPackages();Serial.println("gesendet");
+    
+  }
+  sendPackages();
+  while(Mirf.isSending()) {};
+  
 }
 
