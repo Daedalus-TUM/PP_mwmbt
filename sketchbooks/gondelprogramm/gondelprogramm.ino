@@ -145,36 +145,7 @@ void MahonyQuaternionUpdate(float ax, float ay, float az, float gx, float gy, fl
 
  //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////IMUU/////////////////////////////////////////////////////
-byte data[12];
-byte sent = 0;
-boolean imu_init = true;
-double imu_winkel_x = 0;
-double imu_winkel_y = 0;
-double imu_winkel_z = 0;
-double imu_time;
-int my360;
-
-//Höhenregelung
-int16_t h_tn, h_tm;
-int16_t tm, tn, t_tm, t_tn;
-
-int16_t height_soll = 130;
-
-float   P_h = 4,
-        I_h = .04,
-        D_h = 0,
-    
-        Drehmoment = .02;
-    
-  int height=0;
-  int height2=0;
-  int height3=0;
-  
-  int N_speed, Rot_speed, Z_speed;      
-  bool N_direction,
-       Rot_direction,
-       Z_direction;
-    
+   
 
 #define LED_PIN 13
 bool blinkState = false;
@@ -208,7 +179,38 @@ int PID = 5;
 unsigned long t;  // needed for IPS
 unsigned long time;  //needed for IPS
 int signal = 10; //needed for IPS
+unsigned long height_time = 0, haupt_time = 0;
+byte data[12];
+byte sent = 0;
+boolean imu_init = true;
+double imu_winkel_x = 0;
+double imu_winkel_y = 0;
+double imu_winkel_z = 0;
+double imu_time;
+int my360;
 
+//Höhenregelung
+int16_t h_tn, h_tm;
+int16_t tm, tn, t_tm, t_tn;
+
+int16_t height_soll = 130;
+
+float   P_h = 4,
+        I_h = .04,
+        D_h = 0,
+    
+        Drehmoment = .02;
+    
+  int height=0;
+  int height2=0;
+  int height3=0;
+  
+  int N_speed, Rot_speed, Z_speed;      
+  bool N_direction,
+       Rot_direction,
+       Z_direction;
+ 
+ 
 class Packet {
   //byte time;
   unsigned long time;
@@ -233,6 +235,12 @@ class Packet {
     ~Packet () {
     }
     byte send (void){
+      Serial.print("p#");
+      Serial.println(data[2]);
+      Serial.print("d#");
+      Serial.println(data[0]);
+      Serial.print("m#");
+      Serial.println(data[1]);
       if(millis() - time < data[2]) {
         if (millis()-time >= sent*5){
           data[11] = sent;
@@ -260,27 +268,32 @@ void sendPackages(void) {
     if ((busy&1)) {
       if (Packages[0]->send()) {
         busy &= 0b11111110;
-        delete Packages[0];
+        deletePID(Packages[0]->getPID());
+        //delete Packages[0];
       }
     } else if ((busy&2)) {
       if (Packages[1]->send()) {
         busy &= 0b11111101;
-        delete Packages[1];
+        deletePID(Packages[1]->getPID());
+        //delete Packages[1];
       }
     } else if ((busy&4)) {
       if (Packages[2]->send()) {
         busy &= 0b11111011;
-        delete Packages[2];
+        deletePID(Packages[2]->getPID());
+        //delete Packages[2];
       }
     } else if ((busy&8)) {
       if (Packages[3]->send()) {
         busy &= 0b11110111;
-        delete Packages[3];
+        deletePID(Packages[3]->getPID());
+        //delete Packages[3];
       }
     } else if ((busy&16)) {
       if (Packages[4]->send()) {
         busy &= 0b11101111;
-        delete Packages[4];
+        deletePID(Packages[4]->getPID());
+        //delete Packages[4];
       }
     }
 }
@@ -302,8 +315,12 @@ boolean newPacket (byte dest, byte type, byte *payload) {
       Packages[4] = new Packet (dest, type,payload);
       busy |= 16;
     }
+    Serial.println(busy);
     return true;
-  } else return false;
+  } else {
+    Serial.println(busy);
+    return false;
+  }
 }
 
 void deletePID (int pid) {
@@ -342,8 +359,11 @@ byte parseMsg() {
   unsigned int pid;
   pid = ((((unsigned int)data[3])<< 8) + (unsigned int)data[4]);
   byte from = data[1];
-  
+  Serial.print("pm");
+  Serial.println(data[2]);
   if(data[0] == MYID ) {
+    Serial.print("pid");
+    Serial.println(pid);
     if (isNewPid(from,pid)) {
       switch(data[2]) {
         case 192: //ACK
@@ -528,8 +548,7 @@ void i2cStartMeasurement (byte address) {
 //############## IPS Ultraschall- und Infrarotsignal (200us lang 40kHz Impulse, alle 200ms)
 void ips_signal()
 {
-  if(micros()-time>200000)
-  {
+
     time = micros();
     
     
@@ -551,11 +570,26 @@ void ips_signal()
       delayMicroseconds(1);
       delayMicroseconds(1);
       
-    }
-  }  
+    }  
 }
 
+boolean height_measure(){
+  
+  if(height_time == 0){
+    height3 = height2;
+    height2 = height;
+    i2cStartMeasurement(byte(240));
+    height_time = millis();
+  }
+  if(millis() - height_time >70){
+    height= (i2cGetMeasurement(byte(240))) + (height2*0.4) +(height3*0.3);
+    height_time = 0;
+    return 0;
+  }else return 1;
 
+  
+}
+  
 //TEAM2 HÖHENREGELUNG**************************************************
   
   float derivation(float tm,float tn){
@@ -576,42 +610,42 @@ float integral(float tm,float tn){
   int hoehenregelung(float H_p,float H_i,float H_d,int height){
    
   // Save values from previous cycle
-  h_tn = h_tm;
+    h_tn = h_tm;
   // Get current values
-  h_tm = height;
+    h_tm = height;
    
   // Refresh time value
-  t_tn = t_tm;
-  t_tm = millis();
+    t_tn = t_tm;
+    t_tm = millis();
    
    
   // calculate slope
-  float h_slope = derivation(h_tm, h_tn);
-  float h_int   = integral(h_tm, h_tn);
+    float h_slope = derivation(h_tm, h_tn);
+    float h_int   = integral(h_tm, h_tn);
    
   // calculates difference
-  int diff = height_soll - height;
+    int diff = height_soll - height;
   
   // calculates integral
-  int sum_h = sum_h + h_int; 
-  float f = f + diff;
+    int sum_h = sum_h + h_int; 
+    float f = f + diff;
  
-  int mspeed_h= H_p * diff + H_i * sum_h + H_d * h_slope;
+    int mspeed_h= H_p * diff + H_i * sum_h + H_d * h_slope;
   
   //Serial.print(" stellwert_H: ");Serial.print(mspeed_h);
   
  
   // PID-controller
-  if(mspeed_h > 0)
-  {
-    Z_direction = 0;
-    return mspeed_h;
-  }
-  else{
+    if(mspeed_h > 0)
+    {
+      Z_direction = 0;
+      return mspeed_h;
+    }
+    else{
   //  Z_direction = 1;
   //  return mspeed_h*0.8;
-  return 0;
-  }
+    return 0;
+    }
   }
   
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -623,7 +657,7 @@ float integral(float tm,float tn){
 //*********************************************************************
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
  
  delay(2000);
 
@@ -671,9 +705,6 @@ void setup() {
 
 {
   
-
-  Serial.begin(9600); // Start serial at 38400 bps
-;
     // initialize MPU6050 device
     Serial.println(F("Initializing I2C devices..."));
     mpu.initialize();
@@ -708,55 +739,51 @@ long previousMillis = 0;
 //**************************************************************************
 //**************************************************************************
 void loop(){
+  //delay(8);
+  static boolean ips_flag=0;
+Serial.println("l1 ");
+  //SEND*****************************************************	
+  sendPackages();
+  Serial.println("l11 ");
+  while(Mirf.isSending()) {};
+  //RECEIVE***************************************************
+  Serial.println("l12 ");
+  if(Mirf.dataReady()){
+    parseMsg();
+Serial.println("l2 ");
+  }
+Serial.println("l3 ");
+  if(micros() - time > 200000){
+    ips_signal();
+    time = micros();
+    ips_flag = 1;
+Serial.println("L3 ");
+  }
+Serial.println("l4 ");
+  if((micros() - time > 100000) && ips_flag){
+    ips_flag = height_measure();
+Serial.println("L4 ");
+  }
+Serial.println("l5 ");
+  if(millis() - haupt_time > 100){
+    delay(5);
+    Hauptteil();
+    Serial.println("L5 ");
+    haupt_time = millis();
+  }
 
-  
-  int height=0;
- //Serial.println("t1 ");
-  //Höhe******************************************************
-  
-  height3 = height2;
-  height2 = height;
-  i2cStartMeasurement(byte(240));
-  delay(70);
-  
+}
 
-  height= (i2cGetMeasurement(byte(240))) + (height2*0.4) +(height3*0.3);
+void Hauptteil(){
+
+ Serial.println("t1 ");
 
   //IMU*******************************************************
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
       accelgyro.setSleepEnabled(false);
    
-//Serial.println("t2 ");
 
-  //SEND*****************************************************	
-  sendPackages();
-  while(Mirf.isSending()) {};
-
-  //Serial.println("t3 ");
-  //SEND*****************************************************
-  //sendPackages();
-  //while(Mirf.isSending()) {};
-
-
-  //SEND*****************************************************	
-  sendPackages();
-  while(Mirf.isSending()) {};
-
-
-  if(Mirf.dataReady()){
-    parseMsg();
-  }
-  //Serial.println("t4 ");
-/*
-  unsigned long currentMillis = millis();
- 
-  if(currentMillis - previousMillis > interval) {
-    // save the last time you blinked the LED 
-    previousMillis = currentMillis;   
-
-    
-  }*/
   
  // if((abs(height - height3) > 40) && (height3 != 0)) height_soll += (height - height3);
   
@@ -772,7 +799,7 @@ void loop(){
 
 Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
-//Serial.println("t5 ");
+Serial.println("t2 ");
   int rotSpeed;
   bool rotDir;
 
@@ -794,10 +821,12 @@ Z_speed = hoehenregelung(P_h,I_h,D_h,height);
  //int hoehenregelung(float H_p,float H_i,float H_d,int height){
          digitalWrite(8,Z_direction);    analogWrite(9,Z_speed);
          
-         //Serial.println("t6 ");
+         Serial.println("t3 ");
          
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////IMUU/////////////////////////////////////////////////////
+
+
 
 if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to update all data registers
             mcount++;
@@ -888,10 +917,14 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     
 
     }
-    //Serial.println("t7 ");
+    
+
+    
     uint16_t Y,P,R;
     int16_t Gx=gx*10,Gy=gy*10,Gz=gz*10;
     byte w[6],g[6];
+    
+    Serial.println("t4 ");
     
     Y = (int)yaw*10;P = (int)pitch*10;R = (int)roll*10;
     //Serial.print("Yaw: ");
@@ -902,20 +935,12 @@ if(mpu.getIntDataReadyStatus() == 1) { // wait for data ready status register to
     w[3] = (P >> 8) & 0xFF;
     w[4] = R & 0xFF;
     w[5] = (R >> 8) & 0xFF;
-    
-    if(newPacket(55, 100, w)){
-  sendPackages();
-  while(Mirf.isSending()) {};
-    }
+    newPacket(55, 100, w);
+    Serial.println("t5 ");
     g[0]= (Gx >> 8) & 0xFF; g[1]= Gx & 0xFF;
     g[2]= (Gy >> 8) & 0xFF; g[3]= Gy & 0xFF;
     g[4]= (Gz >> 8) & 0xFF; g[5]= Gz & 0xFF;
-    if(newPacket(55, 102, g)){
-    sendPackages();Serial.println("gesendet");
-    
-  }
-  sendPackages();
-  while(Mirf.isSending()) {};
-  
+    newPacket(55, 102, g);
+    Serial.println("t6 ");
 }
 

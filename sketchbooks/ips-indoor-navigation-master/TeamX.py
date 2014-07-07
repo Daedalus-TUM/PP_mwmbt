@@ -12,7 +12,7 @@ import cairo
 ##
 import TeamX
 
-toArduino = serial.Serial("/dev/ttyUSB0", 9600) 
+toArduino = serial.Serial("/dev/ttyUSB0", 115200) 
 
 class TeamX(threading.Thread):
     """ Das ist Eure Funktionsklasse, hier kommt alles rein, was speziell Euer Team betrifft. In den Eventhandler-Funktionen bitte keine komplizierten Berechnungen durchführen, sondern nur flags setzen, da diese von einem anderen Thread berechnet werden müssten und diesen evtl. blockieren würden(=>GUI hängt, etc.). Die run-Funktion wird in Eurem Thread ausgeführt, da kommen die Berechnungen rein. Zugriff auf die gui oder arduino habt Ihr über self.main.gui bzw. self.main.arduino """

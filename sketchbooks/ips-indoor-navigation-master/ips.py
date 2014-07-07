@@ -173,7 +173,7 @@ class Main():
         self.heading = 0.0
         
         # stations[#stationsnummer]: [0-2] = x,y,z; [3] = radius in mm; [4] = letzte Aktivität
-        self.stations = [[0 for col in range(5)] for row in range(11)]
+        self.stations = [[0 for col in range(5)] for row in range(20)]
         self.waypoints = [[0 for col in range(5)] for row in range(5)]
         
         #Angabe der Wegpunkte kann über Gui bearbeitet werden
@@ -240,40 +240,61 @@ class Main():
         self.stations[10][2] = 0
         '''
         #Simulationspositionen:
-        self.stations[0][0] = 0
-        self.stations[0][1] = 0
+        self.stations[0][0] = 3000
+        self.stations[0][1] = 3000
         self.stations[0][2] = 0
-        self.stations[1][0] = 0
-        self.stations[1][1] = 0
-        self.stations[1][2] = 0
-        self.stations[2][0] = 1000
-        self.stations[2][1] = 0
-        self.stations[2][2] = 0
-        self.stations[3][0] = 1000
-        self.stations[3][1] = 1000
-        self.stations[3][2] = 1000
-        self.stations[4][0] = 0
-        self.stations[4][1] = 1000
-        self.stations[4][2] = 0
-        self.stations[5][0] = -1000
-        self.stations[5][1] = 1000
-        self.stations[5][2] = 1000
-        self.stations[6][0] = -1000
-        self.stations[6][1] = 0
-        self.stations[6][2] = 0
-        self.stations[7][0] = -1000
-        self.stations[7][1] = -1000
-        self.stations[7][2] = 1000
-        self.stations[8][0] = 0
-        self.stations[8][1] = -1000
-        self.stations[8][2] = 0
-        self.stations[9][0] = 1000
-        self.stations[9][1] = -1000
-        self.stations[9][2] = 1000
-        self.stations[10][0] = 0
-        self.stations[10][1] = 0
+        self.stations[1][0] = 3000#1500#0
+        self.stations[1][1] = 3000#3000#0
+        self.stations[1][2] = 0#0#500#
+        self.stations[2][0] = 0
+        self.stations[2][1] = 4000
+        self.stations[2][2] = 100
+        self.stations[3][0] = 3000#1000
+        self.stations[3][1] = 3000#3000#1000
+        self.stations[3][2] = 0#0#1000
+        self.stations[4][0] = 0#6000#0#0
+        self.stations[4][1] = 0#3000#1000
+        self.stations[4][2] = 100#500#0
+        self.stations[5][0] = 3000#450#0#-1000
+        self.stations[5][1] = 3000#2000#1000
+        self.stations[5][2] = 0#0#500#1000
+        self.stations[6][0] = 0#2000 #-1000
+        self.stations[6][1] = 0#2000#0
+        self.stations[6][2] = 100#0
+        self.stations[7][0] = 0#-1000
+        self.stations[7][1] = 2000#-1000
+        self.stations[7][2] = 100#1000
+        self.stations[8][0] = 3000#2000#1000#0
+        self.stations[8][1] = 3000#6000#0#1000#-1000
+        self.stations[8][2] = 0#0
+        self.stations[9][0] = 2000#3000#1000#1000
+        self.stations[9][1] = 2000#3000#1000#-1000
+        self.stations[9][2] = 100#450#1000
+        self.stations[10][0] = 3000
+        self.stations[10][1] = 3000
         self.stations[10][2] = 0
-        
+        self.stations[11][0] = 2000
+        self.stations[11][1] = 4000
+        self.stations[11][2] = 100
+        self.stations[12][0] = 0#2000 #-1000
+        self.stations[12][1] = 0#2000#0
+        self.stations[12][2] = 1000#0
+        self.stations[13][0] = 0#-1000
+        self.stations[13][1] = 2000#-1000
+        self.stations[13][2] = 0#1000
+        self.stations[14][0] = 3000#2000#1000#0
+        self.stations[14][1] = 3000#6000#0#1000#-1000
+        self.stations[14][2] = 0#0
+        self.stations[15][0] = -2000#3000#1000#1000
+        self.stations[15][1] = 2000#3000#1000#-1000
+        self.stations[15][2] = 1000#450#1000
+        self.stations[16][0] = 2000
+        self.stations[16][1] = 0
+        self.stations[16][2] = 100
+        self.stations[17][0] = 2000
+        self.stations[17][1] = 2000
+        self.stations[17][2] = 0
+
         # initialisiere Variablen, werden von initfenster beschrieben
         self.team = 0
         self.ttyport = 0
