@@ -682,7 +682,7 @@ previousMillis = currentMillis;
  // if((abs(height - height3) > 40) && (height3 != 0)) height_soll += (height - height3);
   
  // Serial.print(" korrektur: ");Serial.print(height-height3);
- // Serial.print(" soll: ");Serial.print(height_soll);
+  Serial.print(" soll: ");Serial.print(height_soll);
      
   
   //Serial.print(" hoehe: ");
@@ -693,18 +693,18 @@ previousMillis = currentMillis;
 
 Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
-Serial.print(" rot in");Serial.print(Rot_speed);
-Serial.print(" dir: ");Serial.print(Rot_direction);
+//Serial.print(" rot in");Serial.print(Rot_speed);
+//Serial.print(" dir: ");Serial.print(Rot_direction);
   int rotSpeed;
   bool rotDir;
  rotSpeed = ((1-(2*Rot_direction))*Rot_speed) - (Z_speed * Drehmoment);
  if(rotSpeed > 0)rotDir=0;
  else rotDir=1;
 
-Serial.print(" rot out:");Serial.println(rotSpeed);
+//Serial.print(" rot out:");Serial.println(rotSpeed);
    rotSpeed = abs(rotSpeed);
   
-  //Serial.print(" dreh:");Serial.println(Drehmoment);
+  Serial.print(" dreh:");Serial.println(Drehmoment);
          digitalWrite(4,N_direction); analogWrite(5,N_speed);
          digitalWrite(7,rotDir); analogWrite(6,rotSpeed);
 

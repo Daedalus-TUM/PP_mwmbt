@@ -27,7 +27,9 @@ const byte MAXSTATIONS = 15;
 
 // Global Variables
 int PID = 5,
-  WP_nr = 1;
+  WP_nr = 0,
+  abwurf = 0,
+  box = 0;
 
 int16_t winkel_tn, winkel_tm, t_tm, t_tn, x_alt=0, y_alt=0, z_alt=0,x_uralt = 0, y_uralt = 0,
 
@@ -280,16 +282,22 @@ byte parseMsg() {
           break;
         case 103: {
            static int16_t y2,y_sum;
-           static int i=0;
+           static int i=0, mini = 50, maxi=60;
           
             gz= (((data[5]<<8) + data[6])/10)*0.3 + gz*0.7;
             //int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             //int16_t z= (data[9]<<8) + data[10];
             
+            if(y<mini)mini=y*0.3 + mini*0.7;
+            if(y>maxi)maxi=y*0.3 + mini*0.7;
+            
+            y -= mini;
+            y=y*180/(maxi-mini);
+            
             y_sum += y;
             i++;
-            if(i>5){
+            if(i>3){
               y= y_sum/i;
               i=0;y_sum=0;
             
@@ -512,9 +520,6 @@ int8_t drehregelung(float Rot_p,float Rot_i,float Rot_d, float ist_winkel, float
     
   byte Motor[6], regel_param[6];
   
-  
-  
-  
 
 long previousMillis = 0;
 byte led_an[6];
@@ -557,7 +562,27 @@ void setup() {
 
 void loop(){
  
+    //motoren ansteuerungen
+  int8_t Motor_N, Motor_Rot, Motor_Z,temp_Rot = 0,
+    P_h = 20,                   //*10
+    I_h = 55,                   //*100
+    D_h = 0,                   //
+    drehmomentausgleich = 60, //60
+    
+    Soll_h = 130;          //cm
+    
+  byte regel_param[6];
+  
   sendPackages();
+  regel_param[0] = P_h;
+  regel_param[1] = I_h;
+  regel_param[2] = D_h;
+  regel_param[3] = Soll_h;
+  regel_param[4] = drehmomentausgleich;
+  
+  if(newPacket(54, 30, regel_param))
+  sendPackages();
+  
   
   //Manuelle Steuerung**********************************************************
 #ifdef Manuelle_Steuerung
@@ -618,12 +643,19 @@ Serial.print(" select: ");*/
   WP_WP_winkel = (float) atan((double)(WP[WP_nr + 1][0]- WP[WP_nr][0])/(double)(WP[WP_nr + 1][1]- WP[WP_nr][1]));
   WP_WP_winkel = WP_WP_winkel *360/(2*3.14159);
   
-  if((((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 4900)
+  if((((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 3600)
       && (abs(ist_winkel - WP_WP_winkel) < 60) ){
+        
+        if(WP_nr == abwurf){
+          Soll_h = 40; 
+        }else if(WP_nr == box){
+          Soll_h = 90;
+        }else Soll_h = 130;
+        
         WP_nr++;
         Serial.print(" WPnr: ");Serial.print(WP_nr);
         Serial.print(" x: ");Serial.print(WP[WP_nr][0]);Serial.print(" y: ");Serial.println(WP[WP_nr][1]);
-      }
+      }else Soll_h = 130;
   
 //  Serial.print("ist winkel: ");Serial.print(ist_winkel);
 //  Serial.print("  WP-WP winkel: ");Serial.println(WP_WP_winkel);
@@ -640,7 +672,7 @@ Serial.print(" select: ");*/
   //Serial.print("  mot_rot");Serial.println(Motor_Rot);
 
   if(winkel_flag){
-  Motor_N = 50;//vorwaertsregelung(N_P, ist_winkel, soll_winkel);
+  Motor_N = vorwaertsregelung(N_P, ist_winkel, soll_winkel);
   //Motor_Rot = 0;
   Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
   temp_Rot = Motor_Rot;
