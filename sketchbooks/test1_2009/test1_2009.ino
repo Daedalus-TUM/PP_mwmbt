@@ -281,7 +281,7 @@ byte parseMsg() {
           }
           break;
         case 103: {
-           static int16_t y2,y_sum;
+           static int16_t y2,y_sum=0,x_sum=0;
            static int i=0, mini = 50, maxi=60;
           
             gz= (((data[5]<<8) + data[6])/10)*0.3 + gz*0.7;
@@ -295,18 +295,22 @@ byte parseMsg() {
             y -= mini;
             y=y*180/(maxi-mini);
             
+            x_sum += x;
             y_sum += y;
             i++;
             if(i>3){
               y= y_sum/i;
-              i=0;y_sum=0;
-            
-              y2=y-y2;
+              x= x_sum/i;
+              i= 0 ; y_sum = 0;x_sum = 0;
+            /*
+              y2= y - y2;
             
               if( (y2/abs(y2)) == (gz/abs(gz)))ist_winkel=y;
               else ist_winkel = -y;
             
               y2 = y;
+              */
+              y*=(x/abs(x));
             }
 Serial.print("gZ: ");Serial.print(gz);Serial.println("\t");
  //Serial.print("mX: ");Serial.print(x);Serial.print("\t");

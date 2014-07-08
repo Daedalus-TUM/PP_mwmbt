@@ -615,6 +615,7 @@ static long h_time = 0;
     //m[0]= (mx & 0xFF00) >> 8;m[1]= (mx & 0x00FF);
     m[0]= (gz & 0xFF00) >> 8;m[1]= (gz & 0x00FF);
     m[2]= (my & 0xFF00) >> 8;m[3]= (my & 0x00FF);
+    m[4]= (mx & 0xFF00) >> 8;m[5]= (mx & 0x00FF);
     //m[4]= (mz & 0xFF00) >> 8;m[5]= (mz & 0x00FF);
     newPacket((byte)55, (byte)103, m);
     sendPackages();
