@@ -40,11 +40,11 @@ WP[16][2]= {{-2000,-2000},{-500,100},{0,400},{1000,700},{1500,300}};
 
 //regel parameter
 float N_P = 5,
-      Rot_p = .8,
+      Rot_p = .9,
       Rot_i = 0.2,
       Rot_d = 0.1,
       
-      Pgy = .1;
+      Pgy = .3;
       
 
 class Packet {
@@ -229,7 +229,7 @@ byte parseMsg() {
           break;
           
         case 100:{
-          ist_winkel = ((data[5]) + (data[6] << 8))/10;
+          //ist_winkel = ((data[5]) + (data[6] << 8))/10;
           //Serial.print("Winkel_yaw: ");Serial.print(yaw);
           float pitch =((data[7]) + (data[8] << 8))/10;
           //Serial.print("  Winkel_pitch: ");Serial.print(pitch);
@@ -282,15 +282,19 @@ byte parseMsg() {
           break;
         case 103: {
            static int16_t y2,y_sum=0,x_sum=0;
-           static int i=0, mini = 50, maxi=60;
+           static int i=0, mini = 50, maxi=180;
           
             gz= (((data[5]<<8) + data[6])/10)*0.3 + gz*0.7;
-            //int16_t x= (data[5]<<8) + data[6];
+            int16_t x= (data[9]<<8) + data[10];
             int16_t y= (data[7]<<8) + data[8];
             //int16_t z= (data[9]<<8) + data[10];
             
-            if(y<mini)mini=y*0.3 + mini*0.7;
-            if(y>maxi)maxi=y*0.3 + mini*0.7;
+            //Serial.print("gZ: ");Serial.print(gz);Serial.println("\t");
+             //Serial.print("mX: ");Serial.print(x);Serial.print("\t");
+             //Serial.print("mY: ");Serial.print(y);Serial.print("\t");
+ 
+            //if(y<mini)mini=y*0.3 + mini*0.7;
+            //if(y>maxi)maxi=y*0.3 + mini*0.7;
             
             y -= mini;
             y=y*180/(maxi-mini);
@@ -310,11 +314,11 @@ byte parseMsg() {
             
               y2 = y;
               */
-              y*=(x/abs(x));
+              ist_winkel= y *(x/abs(x));
             }
-Serial.print("gZ: ");Serial.print(gz);Serial.println("\t");
+//Serial.print("gZ: ");Serial.print(gz);Serial.println("\t");
  //Serial.print("mX: ");Serial.print(x);Serial.print("\t");
- Serial.print("mY: ");Serial.print(ist_winkel);Serial.print("\t");
+ //Serial.print("mY: ");Serial.print(ist_winkel);Serial.print("\t");
  //Serial.print("mZ: ");Serial.print(z);Serial.println("\t");
 
           byte pid[2];
@@ -478,7 +482,7 @@ int8_t vorwaertsregelung(float P, float ist_winkel, float soll_winkel){
   
   int8_t N_speed = 127 - abs((winkelDiff(ist_winkel,soll_winkel)) * P);
   //Serial.print(" N_: ");Serial.print(N_speed);
-  Serial.print(" winkel_diff: ");Serial.println(winkelDiff(ist_winkel,soll_winkel));
+  //Serial.print(" winkel_diff: ");Serial.println(winkelDiff(ist_winkel,soll_winkel));
   if(N_speed > 0) return N_speed;
   else return 0;
   
@@ -567,8 +571,8 @@ void setup() {
 void loop(){
  
     //motoren ansteuerungen
-  int8_t Motor_N, Motor_Rot, Motor_Z,temp_Rot = 0,
-    P_h = 20,                   //*10
+  static int8_t Motor_N, Motor_Rot, Motor_Z,temp_Rot = 0,
+    P_h = 30,                   //*10
     I_h = 55,                   //*100
     D_h = 0,                   //
     drehmomentausgleich = 60, //60
@@ -675,19 +679,20 @@ Serial.print(" select: ");*/
   //zum testen!*********
   //Serial.print("  mot_rot");Serial.println(Motor_Rot);
 
-  if(winkel_flag){
-  Motor_N = vorwaertsregelung(N_P, ist_winkel, soll_winkel);
+ // if(winkel_flag){
+  Motor_N = vorwaertsregelung(N_P, ist_winkel, 40);
   //Motor_Rot = 0;
-  Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
+  Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, 40);
   temp_Rot = Motor_Rot;
   //Serial.print("  rot: ");Serial.println(Motor_Rot);
   
- // Serial.print(" ist_W: ");Serial.print(ist_winkel);
+  Serial.print(" ist_W: ");Serial.print(ist_winkel);
+  Serial.print(" winkel differenz: ");Serial.println(winkelDiff(ist_winkel,40));
  // Serial.print(" soll_W: ");Serial.print(soll_winkel);
   
   //Serial.print(" Motor_N: "); Serial.print(Motor_N);
   //Serial.print(" Motor_Rot: "); Serial.println(Motor_Rot);
-  }
+//  }
   
   
   
