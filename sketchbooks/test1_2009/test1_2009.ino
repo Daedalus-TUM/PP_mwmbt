@@ -18,7 +18,7 @@
 
 
 //manuell - automatik*********************************************************
-//#define Manuelle_Steuerung
+#define Manuelle_Steuerung
 
 //constants
 const byte MYID = DEVICEID;
@@ -228,6 +228,7 @@ byte parseMsg() {
           }
           break;
           
+            //lesen der Sensorwerte aus dem IMU-Board
         case 100:{
           ist_winkel = ((data[5]) + (data[6] << 8))/10;
           //Serial.print("Winkel_yaw: ");Serial.print(yaw);
@@ -285,10 +286,11 @@ byte parseMsg() {
            static int i=0, mini = 50, maxi=60;
           
             gz= (((data[5]<<8) + data[6])/10)*0.3 + gz*0.7;
-            //int16_t x= (data[5]<<8) + data[6];
+           /int16_t x= (data[5]<<8) + data[6];
             int16_t y= (data[7]<<8) + data[8];
             //int16_t z= (data[9]<<8) + data[10];
             
+              //berechnung eines kompasses aus den magnetwerten
             if(y<mini)mini=y*0.3 + mini*0.7;
             if(y>maxi)maxi=y*0.3 + mini*0.7;
             
@@ -398,6 +400,7 @@ void sync(byte from, byte syn) {
 //IPS daten
 //********************************************************************
 
+  //differenz zweier Winkel
 float winkelDiff(float W1,float W2){
   float W =W2-W1;
   if(W < -180){
@@ -407,6 +410,8 @@ float winkelDiff(float W1,float W2){
   }
   return W;
 }
+
+  //Winkelberechnung aus den IPS-Koordinaten(schlecht!)
 float xy_winkel(){
 static long XY_time = 0;
 static float winkel = 0;
@@ -420,12 +425,14 @@ if(millis() - XY_time > 2000){
   return winkel;
 }
 
+  //Berechnung des Winkels zwischen Gondel und Wegpunkt
 float WP_winkel(){
   float winkel= (float) atan((double)(WP[WP_nr][0]-x)/(double)(WP[WP_nr][1]-y));
   winkel = winkel*360/(2*3.14159);
   return winkel;
 }
 
+  //einlesen der Positionsdaten
 void lese_position(){
   if(Serial.available() > 0){
     int16_t x_temp, y_temp, z_temp;
@@ -602,12 +609,6 @@ const int SEL = 2; // digital
   horizontal = analogRead(HORIZ) -510; // will be 0-1023
   select = digitalRead(SEL); // will be HIGH (1) if not pressed, and LOW (0) if pressed
 
-  /*
-Serial.print("vertical: ");
-Serial.print(vertical,DEC);
-Serial.print(" horizontal: ");
-Serial.print(horizontal,DEC);
-Serial.print(" select: ");*/
   if(select == HIGH){
 // Serial.println("not pressed");
     Motor_Z = -120;
@@ -622,9 +623,7 @@ Serial.print(" select: ");*/
   if((-40 > horizontal) || (horizontal > 40))Motor_Rot = int8_t(horizontal/4.6);
   else Motor_Rot = 0;
   
-  //Motor_Rot = drehregelung(Rot_p, Rot_i, Rot_d, ist_winkel, soll_winkel);
- // Serial.print("Motor_N: "); Serial.print(Motor_N);
- // Serial.print(" Motor_Rot: "); Serial.println(Motor_Rot);
+
 #else
   
   //autonome Steuerung***********************************************************
@@ -644,19 +643,22 @@ Serial.print(" select: ");*/
   
   //WEGPUNKTE FLUG************************************
   Serial.print(" WPnr: ");Serial.print(WP_nr);
+  
+    //berechnen eines Winkels zwischen zwei Wegpunkten
   WP_WP_winkel = (float) atan((double)(WP[WP_nr + 1][0]- WP[WP_nr][0])/(double)(WP[WP_nr + 1][1]- WP[WP_nr][1]));
   WP_WP_winkel = WP_WP_winkel *360/(2*3.14159);
   
+    //testen ob ein Wegpunkt erreicht wurde
   if((((float)(x - WP[WP_nr][0])*(float)(x - WP[WP_nr][0]) + (float)(y - WP[WP_nr][1])*(float)(y - WP[WP_nr][1])) < 3600)
       && (abs(ist_winkel - WP_WP_winkel) < 60) ){
         
-        if(WP_nr == abwurf){
+        if(WP_nr == abwurf){      //Wegpunkt ist der abwurfpunkt
           Soll_h = 40; 
-        }else if(WP_nr == box){
+        }else if(WP_nr == box){   //an dem wegpunkt befindet sich die kiste -> höhe anpassen
           Soll_h = 90;
         }else Soll_h = 130;
         
-        WP_nr++;
+        WP_nr++;  //der Wegpunkt wird abgehakt
         Serial.print(" WPnr: ");Serial.print(WP_nr);
         Serial.print(" x: ");Serial.print(WP[WP_nr][0]);Serial.print(" y: ");Serial.println(WP[WP_nr][1]);
       }else Soll_h = 130;

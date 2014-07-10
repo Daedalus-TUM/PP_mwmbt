@@ -237,7 +237,8 @@ byte parseMsg() {
         }
         break;
         
-        case 30:{
+          //einlesen der gesendeten Parameter
+        case 30:{    
           
           P_h = data[5]/10.0; Serial.print(" P: ");Serial.print(P_h);
           I_h = data[6]/100.0; Serial.print(" I: ");Serial.print(I_h);
@@ -250,7 +251,7 @@ byte parseMsg() {
         }
         break;
         
-                  //MOTOREN
+          //einlesen der Steuerungswerte für die MOTOREN
         case 33:{
           N_speed = data[5]*2;  N_direction = data[6];
           Rot_speed = data[7]*2;  Rot_direction = data[8];
@@ -263,6 +264,23 @@ byte parseMsg() {
          
         }
         break;
+         /* 
+             //lesen der Sensorwerte aus dem IMU-Board
+         case 100:{
+          ist_winkel = ((data[5]) + (data[6] << 8))/10;
+          //Serial.print("Winkel_yaw: ");Serial.print(yaw);
+          float pitch =((data[7]) + (data[8] << 8))/10;
+          //Serial.print("  Winkel_pitch: ");Serial.print(pitch);
+          float roll =((data[9]) + (data[10] << 8))/10;
+          Serial.print("  Winkel_ist: ");Serial.println(ist_winkel);
+          
+          byte pid[2];
+          pid[0] = data[3];
+          pid[1] = data[4];
+          byte from = data[1];
+          newPacket(from, (byte)192, pid);
+          }
+          break;
           
         case 101: {
             int16_t x= (data[5]<<8) + data[6];
@@ -306,7 +324,7 @@ byte parseMsg() {
           newPacket(from, (byte)192, pid);
           }
           break;
-          
+          */
         default:
           return 0; //kenne Datentyp nicht
       }
@@ -363,8 +381,7 @@ byte isNewPid(byte from, unsigned int pid) {
 
 
 
-//############Höhensensor
-
+    //Funktionen zum auslesen der Höhensensorwerte
  int i2cGetMeasurement (byte address) {
   int reading = -1;
   Wire.beginTransmission(address); // transmit to device #112
@@ -395,7 +412,8 @@ void i2cStartMeasurement (byte address) {
     Wire.endTransmission();
 }
 
-//##############
+
+
 
 //############## IPS Ultraschall- und Infrarotsignal (200us lang 40kHz Impulse, alle 200ms)
 void ips_signal()
@@ -428,7 +446,7 @@ void ips_signal()
 }
 
 
-//TEAM2 HÖHENREGELUNG**************************************************
+    //TEAM2 PID-Regeler angewandt für HÖHENREGELUNG
   
   float derivation(float tm,float tn){
    
@@ -489,7 +507,7 @@ float integral(float tm,float tn){
   
 
 
-//*********************************************************************
+    //Anfang des Hauptprogramms*********************************************************************
 
 void setup() {
   Serial.begin(115200);
@@ -540,18 +558,18 @@ void setup() {
 long previousMillis = 0;
 
 
-//**************************************************************************
-//**************************************************************************
+//***************************************************************************
+//***************************************************************************
 void loop(){
  
   int ax_old, ay_old, az_old, gx_old, gy_old, gz_old, mx_old, my_old, mz_old;
+  static long h_time = 0;
   
   
-  ips_signal();
-
-static long h_time = 0;
-  
-  //Höhe******************************************************
+   ips_signal();  //senden des 40kHz Signals für die IPS bodenstationen
+   
+   
+  //Berechnung der Höhenwerte************************************************
   
   height3 = height2;
   height2 = height;
@@ -565,7 +583,8 @@ static long h_time = 0;
 
   
 
-  //IMU*******************************************************
+  //auslesen und weitersenden der IMU-Daten***********************************
+  
   //Serial.print("Sleep Enabled: ");
   //Serial.println(accelgyro.getSleepEnabled());
       accelgyro.setSleepEnabled(false);
@@ -573,22 +592,7 @@ static long h_time = 0;
   // read raw accel/gyro measurements from device
       accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
       
-  // process imu data
-      if(imu_init){
-        ax_old = ax; ay_old = ay; az_old = az;
-        gx_old = gx; gy_old = gy; gz_old = gz;
-        mx_old = mx; my_old = my; mz_old = mz;
-        imu_init = false;
-      }
-      
-      if(micros()-imu_time > 100)
-        {
-       //   Serial.println(imu_time);
-          //calculate angle
-          imu_winkel_x = imu_winkel_x + 0.1*ax/131.0;
-         // Serial.print("IMU Winkel: "); Serial.println(imu_winkel_x);
-          //imu_time = micros();
-        }
+  
       
       //Serial.print("ax:");Serial.print(ax-ax_old);Serial.print(" ay:");Serial.print(ay-ax_old);Serial.print(" az:");Serial.print(az-ax_old);
       //Serial.print(" mx:");Serial.print(mx-mx_old);
@@ -596,9 +600,7 @@ static long h_time = 0;
       //Serial.print(" mz:");Serial.print(mz-mz_old);
       //Serial.print(" gx:");Serial.print(gx-gx_old);Serial.print(" gy:");Serial.print(gy-gy_old);Serial.print(" gz:");Serial.println(gz-gz_old);
       
-      ax_old = ax; ay_old = ay; az_old = az;
-      gx_old = gx; gy_old = gy; gz_old = gz;
-      mx_old = mx; my_old = my; mz_old = mz;
+
     // these methods (and a few others) are also available
     //accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
@@ -641,8 +643,6 @@ Serial.println(mz);
 */
 
 
-  
-
 //  sendPackages();
 //  if (newPacket (55, 101, a))
 //  sendPackages();
@@ -654,17 +654,7 @@ Serial.println(mz);
 
 
 
-  //SEND*****************************************************
-  sendPackages();
-  while(Mirf.isSending()) {};
-
-  
-  //SEND*****************************************************
-  //sendPackages();
-  //while(Mirf.isSending()) {};
-
-
-  //SEND*****************************************************
+  //SEND**********************************************************************
   sendPackages();
   while(Mirf.isSending()) {};
 
@@ -690,7 +680,7 @@ previousMillis = currentMillis;
   //Serial.println(height);
 
 
-//Motoren Steuerung*****************************************
+//Motoren Steuerung***********************************************************
 
 Z_speed = hoehenregelung(P_h,I_h,D_h,height);
 
